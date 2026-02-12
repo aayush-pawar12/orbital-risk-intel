@@ -30,8 +30,12 @@ class Settings(BaseSettings):
     PREDICTION_WINDOW_HOURS: int = 24
     PREDICTION_STEP_MINUTES: int = 5
 
-    # CORS
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    # CORS — comma-separated string for env var compatibility
+    CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
 
     model_config = {"env_file": ".env", "extra": "ignore"}
 
