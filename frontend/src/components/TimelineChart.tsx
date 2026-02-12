@@ -108,7 +108,7 @@ export default function TimelineChart({ prediction, loading }: Props) {
                             }}
                             labelStyle={{ color: '#8b95a8' }}
                             itemStyle={{ color: '#e8ecf4' }}
-                            formatter={(value: number) => [`${value.toFixed(2)} km`, 'Distance']}
+                            formatter={(value: unknown) => [`${Number(value).toFixed(2)} km`, 'Distance']}
                         />
                         <ReferenceLine
                             y={1}
