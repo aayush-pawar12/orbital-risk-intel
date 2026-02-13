@@ -162,7 +162,7 @@ export const api = {
       body: JSON.stringify({ satellite_id, debris_id }),
     }),
 
-  predict: (satellite_id: number, debris_id: number, window_hours = 24, step_minutes = 5) =>
+  predict: (satellite_id: number, debris_id: number, window_hours = 12, step_minutes = 15) =>
     apiFetch<PredictResponse>('/predict', {
       method: 'POST',
       body: JSON.stringify({ satellite_id, debris_id, window_hours, step_minutes }),
