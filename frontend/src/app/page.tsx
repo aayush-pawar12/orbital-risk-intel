@@ -50,7 +50,7 @@ export default function Dashboard() {
         if (sats.length > 0) setSelectedSatId(sats[0].id);
         if (debs.length > 0) setSelectedDebId(debs[0].id);
       } catch (e: any) {
-        setError('Cannot connect to backend API. Make sure the FastAPI server is running on port 8000.');
+        setError('Cannot connect to backend API. The server may be waking up — please wait 30 seconds and refresh.');
         setApiOnline(false);
       } finally {
         setLoading(false);
