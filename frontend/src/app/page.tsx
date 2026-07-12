@@ -12,6 +12,8 @@ import ClosestApproachPanel from '@/components/ClosestApproachPanel';
 import VectorPanel from '@/components/VectorPanel';
 import SatelliteMapPanel from '@/components/SatelliteMapPanel';
 import EmergencyResponsePanel from '@/components/EmergencyResponsePanel';
+import AuditTrailModal from '@/components/AuditTrailModal';
+import { Shield, AlertTriangle } from 'lucide-react';
 
 export default function Dashboard() {
   // ── Data state ──
@@ -31,6 +33,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [assessing, setAssessing] = useState(false);
   const [predicting, setPredicting] = useState(false);
+  const [simulatingDrill, setSimulatingDrill] = useState(false);
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [apiOnline, setApiOnline] = useState(false);
 
@@ -86,6 +90,21 @@ export default function Dashboard() {
       setError(`Prediction failed: ${e.message}`);
     } finally {
       setPredicting(false);
+    }
+  }, [selectedSatId, selectedDebId]);
+
+  // ── Run emergency drill simulation (Core USP demo) ──
+  const runSimulationDrill = useCallback(async () => {
+    if (!selectedSatId || !selectedDebId) return;
+    setSimulatingDrill(true);
+    setError(null);
+    try {
+      const result = await api.simulateDrill(selectedSatId, selectedDebId);
+      setAssessment(result);
+    } catch (e: any) {
+      setError(`Drill simulation failed: ${e.message}`);
+    } finally {
+      setSimulatingDrill(false);
     }
   }, [selectedSatId, selectedDebId]);
 
@@ -200,7 +219,7 @@ export default function Dashboard() {
             </select>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button
               className="btn-primary"
               onClick={runAssessment}
@@ -220,6 +239,50 @@ export default function Dashboard() {
               }}
             >
               {predicting ? '◌ PREDICTING...' : '◈ PREDICT TCA'}
+            </button>
+
+            <button
+              onClick={runSimulationDrill}
+              disabled={simulatingDrill || loading || !selectedSatId || !selectedDebId}
+              style={{
+                whiteSpace: 'nowrap',
+                background: 'linear-gradient(135deg, #ff2d55, #ff5e3a)',
+                color: '#fff',
+                border: 'none',
+                padding: '0.6rem 1.1rem',
+                borderRadius: '8px',
+                fontWeight: 700,
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 4px 14px rgba(255, 45, 85, 0.35)',
+              }}
+            >
+              <AlertTriangle size={14} />
+              {simulatingDrill ? '◌ DRILL IN PROGRESS...' : '🚨 EMERGENCY DRILL'}
+            </button>
+
+            <button
+              onClick={() => setIsAuditModalOpen(true)}
+              style={{
+                whiteSpace: 'nowrap',
+                background: 'var(--bg-secondary)',
+                color: 'var(--accent-cyan)',
+                border: '1px solid rgba(0, 212, 255, 0.35)',
+                padding: '0.6rem 1rem',
+                borderRadius: '8px',
+                fontWeight: 700,
+                fontSize: '0.78rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              <Shield size={14} />
+              🛡️ AUDIT REGISTER
             </button>
           </div>
         </div>
@@ -299,6 +362,11 @@ export default function Dashboard() {
             Risk Thresholds: CRITICAL &lt; 1 km · WARNING 1–5 km · SAFE &gt; 5 km
           </p>
         </footer>
+
+        <AuditTrailModal
+          isOpen={isAuditModalOpen}
+          onClose={() => setIsAuditModalOpen(false)}
+        />
       </main>
     </div>
   );

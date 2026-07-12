@@ -27,7 +27,7 @@ const nextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob:",
               "frame-src https://www.n2yo.com https://satellitemap.space https://celestrak.org",
-              "connect-src 'self' https://orbital-risk-intel.onrender.com " + (process.env.NEXT_PUBLIC_API_URL || ''),
+              "connect-src 'self' http://localhost:8000 http://127.0.0.1:8000 https://orbital-risk-intel.onrender.com " + (process.env.NEXT_PUBLIC_API_URL || ''),
             ].join('; '),
           },
         ],
@@ -41,9 +41,6 @@ const nextConfig = {
   // Ignore build errors for production deploy (strict type issues in Recharts)
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 };
 

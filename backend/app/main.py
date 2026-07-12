@@ -13,7 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import init_db, SessionLocal
-from app.routers import satellites, debris, assessment
+from app.routers import satellites, debris, assessment, audit
 from app.scheduler import start_scheduler, stop_scheduler
 from app.services.tle_ingestion import refresh_all_tles
 
@@ -34,20 +34,27 @@ async def lifespan(app: FastAPI):
     init_db()
     logger.info("Database initialized")
 
-    # Seed the database if empty
+    # Seed the database and ensure fallback TLE records exist
     from app.models import Satellite
+    from seed_data import seed_database, ensure_fallback_tles
     db = SessionLocal()
-    if db.query(Satellite).count() == 0:
-        logger.info("Empty database detected — running seed...")
-        from seed_data import seed_database
-        seed_database(db)
-        logger.info("Seed complete")
+    try:
+        if db.query(Satellite).count() == 0:
+            logger.info("Empty database detected — running seed...")
+            seed_database(db)
+            logger.info("Seed complete")
+        else:
+            ensure_fallback_tles(db)
 
-        # Fetch initial TLEs
-        logger.info("Fetching initial TLE data from Celestrak...")
-        await refresh_all_tles(db)
-        logger.info("Initial TLE fetch complete")
-    db.close()
+        # Attempt to refresh TLEs from Celestrak safely
+        try:
+            logger.info("Fetching TLE data from Celestrak...")
+            await refresh_all_tles(db)
+            logger.info("TLE fetch check complete")
+        except Exception as e:
+            logger.warning(f"Live TLE refresh warning (using fallback TLEs): {e}")
+    finally:
+        db.close()
 
     # Start background TLE refresh scheduler
     start_scheduler()
@@ -79,6 +86,7 @@ app.add_middleware(
 app.include_router(satellites.router)
 app.include_router(debris.router)
 app.include_router(assessment.router)
+app.include_router(audit.router)
 
 
 @app.get("/")

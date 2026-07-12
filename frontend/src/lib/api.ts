@@ -2,9 +2,89 @@
  * API client for the Orbital Risk Intelligence System backend.
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://orbital-risk-intel.onrender.com/api';
+function getApiBase(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:8000/api';
+  }
+  return 'https://orbital-risk-intel.onrender.com/api';
+}
 
-// ── Types ─────────────────────────────────────────────────────────────
+export interface IncidentRecord {
+  id: number;
+  incident_id: string;
+  satellite_name: string;
+  satellite_norad_id: number;
+  debris_name: string;
+  debris_norad_id: number;
+  distance_km: number;
+  tca_utc: string | null;
+  response_status: string;
+  mitigation_action: string;
+  mitigation_contract_id: string;
+  created_at: string;
+}
+
+export interface AuditLogEntry {
+  id: number;
+  incident_id: string;
+  event_type: string;
+  block_hash: string;
+  prev_hash: string;
+  tx_hash: string;
+  verification_status: string;
+  block_data: any;
+  created_at: string;
+}
+
+export interface AuditLogResponse {
+  chain_integrity: string;
+  total_blocks: number;
+  entries: AuditLogEntry[];
+}
+
+// ── API Functions ─────────────────────────────────────────────────────
+
+async function apiFetch<T>(path: string, opts?: RequestInit): Promise<T> {
+  const base = getApiBase();
+  const res = await fetch(`${base}${path}`, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opts,
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`API ${res.status}: ${body}`);
+  }
+  return res.json();
+}
+
+export const api = {
+  getSatellites: () => apiFetch<Satellite[]>('/satellites'),
+  getDebris: () => apiFetch<DebrisObj[]>('/debris'),
+  getStatus: () => apiFetch<SystemStatus>('/status'),
+  getIncidents: () => apiFetch<IncidentRecord[]>('/incidents'),
+  getAuditLogs: () => apiFetch<AuditLogResponse>('/audit-logs'),
+
+  assess: (satellite_id: number, debris_id: number) =>
+    apiFetch<AssessResponse>('/assess', {
+      method: 'POST',
+      body: JSON.stringify({ satellite_id, debris_id }),
+    }),
+
+  predict: (satellite_id: number, debris_id: number, window_hours = 24, step_minutes = 5) =>
+    apiFetch<PredictResponse>('/predict', {
+      method: 'POST',
+      body: JSON.stringify({ satellite_id, debris_id, window_hours, step_minutes }),
+    }),
+
+  simulateDrill: (satellite_id: number, debris_id: number) =>
+    apiFetch<AssessResponse>('/simulate-drill', {
+      method: 'POST',
+      body: JSON.stringify({ satellite_id, debris_id }),
+    }),
+};
 
 export interface Satellite {
   id: number;
@@ -137,34 +217,4 @@ export interface SystemStatus {
   total_audit_entries: number;
 }
 
-// ── API Functions ─────────────────────────────────────────────────────
 
-async function apiFetch<T>(path: string, opts?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...opts,
-  });
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`API ${res.status}: ${body}`);
-  }
-  return res.json();
-}
-
-export const api = {
-  getSatellites: () => apiFetch<Satellite[]>('/satellites'),
-  getDebris: () => apiFetch<DebrisObj[]>('/debris'),
-  getStatus: () => apiFetch<SystemStatus>('/status'),
-
-  assess: (satellite_id: number, debris_id: number) =>
-    apiFetch<AssessResponse>('/assess', {
-      method: 'POST',
-      body: JSON.stringify({ satellite_id, debris_id }),
-    }),
-
-  predict: (satellite_id: number, debris_id: number, window_hours = 24, step_minutes = 5) =>
-    apiFetch<PredictResponse>('/predict', {
-      method: 'POST',
-      body: JSON.stringify({ satellite_id, debris_id, window_hours, step_minutes }),
-    }),
-};
