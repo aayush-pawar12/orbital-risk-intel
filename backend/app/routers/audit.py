@@ -8,10 +8,19 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import (
-    CriticalIncident, AuditLog, Satellite, Debris,
-    ConjunctionAssessment, TLERecord,
+    CriticalIncident,
+    AuditLog,
+    Satellite,
+    Debris,
+    ConjunctionAssessment,
 )
-from app.schemas import AssessRequest, AssessResponse, PositionVector, VelocityVector, RiskClassification
+from app.schemas import (
+    AssessRequest,
+    AssessResponse,
+    PositionVector,
+    VelocityVector,
+    RiskClassification,
+)
 from app.services.automated_response import execute_critical_response
 from app.services.tle_ingestion import get_latest_tle
 from app.services.propagation import create_satellite, propagate_at
@@ -31,32 +40,29 @@ def list_incidents(db: Session = Depends(get_db), limit: int = 50):
     )
     results = []
     for inc in incidents:
-        results.append({
-            "id": inc.id,
-            "incident_id": inc.incident_id,
-            "satellite_name": inc.satellite_name,
-            "satellite_norad_id": inc.satellite_norad_id,
-            "debris_name": inc.debris_name,
-            "debris_norad_id": inc.debris_norad_id,
-            "distance_km": round(inc.distance_km, 4),
-            "tca_utc": inc.tca_utc.isoformat() if inc.tca_utc else None,
-            "response_status": inc.response_status,
-            "mitigation_action": inc.mitigation_action,
-            "mitigation_contract_id": inc.mitigation_contract_id,
-            "created_at": inc.created_at.isoformat() if inc.created_at else None,
-        })
+        results.append(
+            {
+                "id": inc.id,
+                "incident_id": inc.incident_id,
+                "satellite_name": inc.satellite_name,
+                "satellite_norad_id": inc.satellite_norad_id,
+                "debris_name": inc.debris_name,
+                "debris_norad_id": inc.debris_norad_id,
+                "distance_km": round(inc.distance_km, 4),
+                "tca_utc": inc.tca_utc.isoformat() if inc.tca_utc else None,
+                "response_status": inc.response_status,
+                "mitigation_action": inc.mitigation_action,
+                "mitigation_contract_id": inc.mitigation_contract_id,
+                "created_at": inc.created_at.isoformat() if inc.created_at else None,
+            }
+        )
     return results
 
 
 @router.get("/audit-logs")
 def list_audit_logs(db: Session = Depends(get_db), limit: int = 50):
     """Return blockchain-style cryptographic audit logs and verify SHA-256 chain integrity."""
-    logs = (
-        db.query(AuditLog)
-        .order_by(AuditLog.id.desc())
-        .limit(limit)
-        .all()
-    )
+    logs = db.query(AuditLog).order_by(AuditLog.id.desc()).limit(limit).all()
 
     # Verify chain integrity
     all_logs_asc = db.query(AuditLog).order_by(AuditLog.id.asc()).all()
@@ -68,17 +74,19 @@ def list_audit_logs(db: Session = Depends(get_db), limit: int = 50):
 
     entries = []
     for log in logs:
-        entries.append({
-            "id": log.id,
-            "incident_id": log.incident_id,
-            "event_type": log.event_type,
-            "block_hash": log.block_hash,
-            "prev_hash": log.prev_hash,
-            "tx_hash": log.tx_hash,
-            "verification_status": log.verification_status,
-            "block_data": json.loads(log.block_data) if log.block_data else {},
-            "created_at": log.created_at.isoformat() if log.created_at else None,
-        })
+        entries.append(
+            {
+                "id": log.id,
+                "incident_id": log.incident_id,
+                "event_type": log.event_type,
+                "block_hash": log.block_hash,
+                "prev_hash": log.prev_hash,
+                "tx_hash": log.tx_hash,
+                "verification_status": log.verification_status,
+                "block_data": json.loads(log.block_data) if log.block_data else {},
+                "created_at": log.created_at.isoformat() if log.created_at else None,
+            }
+        )
 
     return {
         "chain_integrity": "VALID" if chain_valid else "CORRUPTED",
@@ -97,11 +105,15 @@ def simulate_emergency_drill(req: AssessRequest, db: Session = Depends(get_db)):
     """
     satellite = db.query(Satellite).filter(Satellite.id == req.satellite_id).first()
     if not satellite:
-        raise HTTPException(status_code=404, detail=f"Satellite ID {req.satellite_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Satellite ID {req.satellite_id} not found"
+        )
 
     debris = db.query(Debris).filter(Debris.id == req.debris_id).first()
     if not debris:
-        raise HTTPException(status_code=404, detail=f"Debris ID {req.debris_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Debris ID {req.debris_id} not found"
+        )
 
     sat_tle = get_latest_tle(db, satellite.norad_id)
     deb_tle = get_latest_tle(db, debris.norad_id)
@@ -151,6 +163,7 @@ def simulate_emergency_drill(req: AssessRequest, db: Session = Depends(get_db)):
     )
 
     import numpy as np
+
     sat_vel_mag = float(np.linalg.norm(sat_vel))
     deb_vel_mag = float(np.linalg.norm(deb_vel))
 

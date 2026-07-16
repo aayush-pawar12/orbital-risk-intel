@@ -1,11 +1,10 @@
 """Pydantic schemas for API request/response validation."""
 
-from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Optional
 
-
 # ── Satellite ──────────────────────────────────────────────────────────
+
 
 class SatelliteOut(BaseModel):
     id: int
@@ -21,6 +20,7 @@ class SatelliteOut(BaseModel):
 
 # ── Debris ─────────────────────────────────────────────────────────────
 
+
 class DebrisOut(BaseModel):
     id: int
     name: str
@@ -33,6 +33,7 @@ class DebrisOut(BaseModel):
 
 
 # ── Assessment ─────────────────────────────────────────────────────────
+
 
 class AssessRequest(BaseModel):
     satellite_id: int
@@ -77,6 +78,7 @@ class AssessResponse(BaseModel):
 
 # ── Prediction ─────────────────────────────────────────────────────────
 
+
 class PredictRequest(BaseModel):
     satellite_id: int
     debris_id: int
@@ -107,6 +109,7 @@ class PredictResponse(BaseModel):
 
 # ── System Status ──────────────────────────────────────────────────────
 
+
 class SystemStatus(BaseModel):
     status: str
     app_name: str
@@ -120,4 +123,3 @@ class SystemStatus(BaseModel):
     risk_thresholds: dict
     total_incidents: int = 0
     total_audit_entries: int = 0
-

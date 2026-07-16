@@ -7,12 +7,11 @@ Implements LEO conjunction risk thresholds and time-of-closest-approach
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from typing import Optional
 
 import numpy as np
 
 from app.config import get_settings
-from app.services.propagation import create_satellite, propagate_at, propagate_range
+from app.services.propagation import create_satellite, propagate_range
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -112,11 +111,13 @@ def predict_closest_approach(
         dist = calculate_distance(r1.position_km, r2.position_km)
         risk = classify_risk(dist)
 
-        timeline.append({
-            "time_utc": r1.time_utc.isoformat(),
-            "distance_km": round(dist, 4),
-            "risk_level": risk.risk_level,
-        })
+        timeline.append(
+            {
+                "time_utc": r1.time_utc.isoformat(),
+                "distance_km": round(dist, 4),
+                "risk_level": risk.risk_level,
+            }
+        )
 
         if dist < min_distance:
             min_distance = dist

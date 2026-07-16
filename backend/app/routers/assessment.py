@@ -8,15 +8,32 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.database import get_db
-from app.models import Satellite, Debris, TLERecord, ConjunctionAssessment, CriticalIncident, AuditLog
+from app.models import (
+    Satellite,
+    Debris,
+    TLERecord,
+    ConjunctionAssessment,
+    CriticalIncident,
+    AuditLog,
+)
 from app.schemas import (
-    AssessRequest, AssessResponse, PredictRequest, PredictResponse,
-    PositionVector, VelocityVector, RiskClassification,
-    TimelinePoint, SystemStatus,
+    AssessRequest,
+    AssessResponse,
+    PredictRequest,
+    PredictResponse,
+    PositionVector,
+    VelocityVector,
+    RiskClassification,
+    TimelinePoint,
+    SystemStatus,
 )
 from app.config import get_settings
 from app.services.propagation import create_satellite, propagate_at
-from app.services.risk_engine import calculate_distance, classify_risk, predict_closest_approach
+from app.services.risk_engine import (
+    calculate_distance,
+    classify_risk,
+    predict_closest_approach,
+)
 from app.services.tle_ingestion import get_latest_tle
 from app.services.automated_response import execute_critical_response
 
@@ -47,11 +64,15 @@ def assess_conjunction(req: AssessRequest, db: Session = Depends(get_db)):
     # Look up objects
     satellite = db.query(Satellite).filter(Satellite.id == req.satellite_id).first()
     if not satellite:
-        raise HTTPException(status_code=404, detail=f"Satellite ID {req.satellite_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Satellite ID {req.satellite_id} not found"
+        )
 
     debris = db.query(Debris).filter(Debris.id == req.debris_id).first()
     if not debris:
-        raise HTTPException(status_code=404, detail=f"Debris ID {req.debris_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Debris ID {req.debris_id} not found"
+        )
 
     # Get latest TLEs
     sat_tle = _get_tle_or_404(db, satellite.norad_id, satellite.name)
@@ -70,6 +91,7 @@ def assess_conjunction(req: AssessRequest, db: Session = Depends(get_db)):
     risk = classify_risk(distance)
 
     import numpy as np
+
     sat_vel_mag = float(np.linalg.norm(sat_state.velocity_km_s))
     deb_vel_mag = float(np.linalg.norm(deb_state.velocity_km_s))
 
@@ -90,7 +112,9 @@ def assess_conjunction(req: AssessRequest, db: Session = Depends(get_db)):
     # ═══════════════════════════════════════════════════════════════════
     auto_response = None
     if risk.distance_km < settings.RISK_CRITICAL_THRESHOLD:
-        logger.critical(f"🚨 CRITICAL THRESHOLD BREACH DETECTED — Auto-executing response")
+        logger.critical(
+            f"🚨 CRITICAL THRESHOLD BREACH DETECTED — Auto-executing response"
+        )
         auto_response = execute_critical_response(
             db=db,
             satellite_name=satellite.name,
@@ -150,11 +174,15 @@ def predict_conjunction(req: PredictRequest, db: Session = Depends(get_db)):
     """
     satellite = db.query(Satellite).filter(Satellite.id == req.satellite_id).first()
     if not satellite:
-        raise HTTPException(status_code=404, detail=f"Satellite ID {req.satellite_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Satellite ID {req.satellite_id} not found"
+        )
 
     debris = db.query(Debris).filter(Debris.id == req.debris_id).first()
     if not debris:
-        raise HTTPException(status_code=404, detail=f"Debris ID {req.debris_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Debris ID {req.debris_id} not found"
+        )
 
     sat_tle = _get_tle_or_404(db, satellite.norad_id, satellite.name)
     deb_tle = _get_tle_or_404(db, debris.norad_id, debris.name)
@@ -209,9 +237,7 @@ def predict_conjunction(req: PredictRequest, db: Session = Depends(get_db)):
         tca_utc=result.tca_utc.isoformat(),
         predicted_risk=result.predicted_risk,
         confidence_level=result.confidence_level,
-        timeline=[
-            TimelinePoint(**point) for point in result.timeline
-        ],
+        timeline=[TimelinePoint(**point) for point in result.timeline],
         auto_response=auto_response,
     )
 
@@ -225,11 +251,7 @@ def system_status(db: Session = Depends(get_db)):
     incident_count = db.query(CriticalIncident).count()
     audit_count = db.query(AuditLog).count()
 
-    latest_tle = (
-        db.query(TLERecord)
-        .order_by(TLERecord.created_at.desc())
-        .first()
-    )
+    latest_tle = db.query(TLERecord).order_by(TLERecord.created_at.desc()).first()
 
     return SystemStatus(
         status="operational",

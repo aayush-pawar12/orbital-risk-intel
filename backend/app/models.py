@@ -2,7 +2,15 @@
 
 from datetime import datetime, timezone
 from sqlalchemy import (
-    Column, Integer, String, Float, DateTime, Boolean, ForeignKey, Text, Index
+    Column,
+    Integer,
+    String,
+    Float,
+    DateTime,
+    Boolean,
+    ForeignKey,
+    Text,
+    Index,
 )
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -19,7 +27,9 @@ class Satellite(Base):
     active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-    tle_records = relationship("TLERecord", back_populates="satellite", foreign_keys="TLERecord.satellite_id")
+    tle_records = relationship(
+        "TLERecord", back_populates="satellite", foreign_keys="TLERecord.satellite_id"
+    )
     assessments = relationship("ConjunctionAssessment", back_populates="satellite")
 
     def __repr__(self):
@@ -36,7 +46,9 @@ class Debris(Base):
     orbit_type = Column(String(50), nullable=False, default="LEO")
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-    tle_records = relationship("TLERecord", back_populates="debris", foreign_keys="TLERecord.debris_id")
+    tle_records = relationship(
+        "TLERecord", back_populates="debris", foreign_keys="TLERecord.debris_id"
+    )
     assessments = relationship("ConjunctionAssessment", back_populates="debris")
 
     def __repr__(self):
@@ -56,8 +68,12 @@ class TLERecord(Base):
     epoch = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
-    satellite = relationship("Satellite", back_populates="tle_records", foreign_keys=[satellite_id])
-    debris = relationship("Debris", back_populates="tle_records", foreign_keys=[debris_id])
+    satellite = relationship(
+        "Satellite", back_populates="tle_records", foreign_keys=[satellite_id]
+    )
+    debris = relationship(
+        "Debris", back_populates="tle_records", foreign_keys=[debris_id]
+    )
 
     __table_args__ = (
         Index("ix_tle_records_object_created", "object_type", "norad_id", "created_at"),
@@ -85,9 +101,7 @@ class ConjunctionAssessment(Base):
     satellite = relationship("Satellite", back_populates="assessments")
     debris = relationship("Debris", back_populates="assessments")
 
-    __table_args__ = (
-        Index("ix_conjunction_sat_debris", "satellite_id", "debris_id"),
-    )
+    __table_args__ = (Index("ix_conjunction_sat_debris", "satellite_id", "debris_id"),)
 
     def __repr__(self):
         return f"<ConjunctionAssessment(sat={self.satellite_id}, debris={self.debris_id}, risk={self.risk_level})>"
@@ -95,6 +109,7 @@ class ConjunctionAssessment(Base):
 
 class CriticalIncident(Base):
     """Autonomous incident record — created automatically on CRITICAL breach."""
+
     __tablename__ = "critical_incidents"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -118,6 +133,7 @@ class CriticalIncident(Base):
 
 class AuditLog(Base):
     """Blockchain-style immutable audit log with SHA-256 hash chain."""
+
     __tablename__ = "audit_logs"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -132,4 +148,3 @@ class AuditLog(Base):
 
     def __repr__(self):
         return f"<AuditLog(tx={self.tx_hash[:16]}, block={self.block_hash[:16]})>"
-

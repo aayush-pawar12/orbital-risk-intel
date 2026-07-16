@@ -33,11 +33,7 @@ def _generate_block_hash(data: dict, prev_hash: str) -> str:
 
 def _get_chain_prev_hash(db: Session) -> str:
     """Get the hash of the last audit log entry to form the chain."""
-    last_entry = (
-        db.query(AuditLog)
-        .order_by(AuditLog.created_at.desc())
-        .first()
-    )
+    last_entry = db.query(AuditLog).order_by(AuditLog.created_at.desc()).first()
     if last_entry and last_entry.block_hash:
         return last_entry.block_hash
     # Genesis block hash
@@ -77,7 +73,9 @@ def execute_critical_response(
         debris_norad_id=debris_norad_id,
         distance_km=distance_km,
         tca_utc=tca_utc,
-        satellite_position=json.dumps(satellite_position) if satellite_position else None,
+        satellite_position=(
+            json.dumps(satellite_position) if satellite_position else None
+        ),
         debris_position=json.dumps(debris_position) if debris_position else None,
         response_status="EXECUTED",
         mitigation_action="AUTOMATED_AVOIDANCE_MANEUVER_INITIATED",
@@ -104,9 +102,9 @@ def execute_critical_response(
     }
 
     block_hash = _generate_block_hash(block_data, prev_hash)
-    tx_hash = "0x" + hashlib.sha256(
-        (incident_id + now.isoformat()).encode()
-    ).hexdigest()[:40]
+    tx_hash = (
+        "0x" + hashlib.sha256((incident_id + now.isoformat()).encode()).hexdigest()[:40]
+    )
 
     logger.info(f"  ✓ Blockchain proof generated: {block_hash[:16]}...")
 
@@ -138,13 +136,17 @@ def execute_critical_response(
         "insurance_claim": {
             "policy_id": "ORIS-INS-" + incident_id[:6].upper(),
             "coverage_triggered": True,
-            "estimated_cost_usd": round(max(50000, 500000 / max(distance_km, 0.001)), 2),
+            "estimated_cost_usd": round(
+                max(50000, 500000 / max(distance_km, 0.001)), 2
+            ),
         },
     }
 
     incident.mitigation_contract_id = mitigation_contract["contract_id"]
     db.commit()
-    logger.info(f"  ✓ Mitigation contract executed: {mitigation_contract['contract_id']}")
+    logger.info(
+        f"  ✓ Mitigation contract executed: {mitigation_contract['contract_id']}"
+    )
 
     # ── Return complete response ────────────────────────────────────────
     response = {

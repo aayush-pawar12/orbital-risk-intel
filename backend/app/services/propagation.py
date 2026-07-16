@@ -21,7 +21,8 @@ _ts = load.timescale()
 @dataclass
 class PropagationResult:
     """Result of SGP4 orbit propagation at a single instant."""
-    position_km: np.ndarray   # [x, y, z] in GCRS frame
+
+    position_km: np.ndarray  # [x, y, z] in GCRS frame
     velocity_km_s: np.ndarray  # [vx, vy, vz] in GCRS frame
     time_utc: datetime
 

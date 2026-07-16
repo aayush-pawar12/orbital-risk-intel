@@ -22,12 +22,18 @@ def list_debris(db: Session = Depends(get_db)):
             .order_by(TLERecord.created_at.desc())
             .first()
         )
-        results.append(DebrisOut(
-            id=deb.id,
-            name=deb.name,
-            norad_id=deb.norad_id,
-            source=deb.source,
-            orbit_type=deb.orbit_type,
-            latest_tle_epoch=latest_tle.epoch.isoformat() if latest_tle and latest_tle.epoch else None,
-        ))
+        results.append(
+            DebrisOut(
+                id=deb.id,
+                name=deb.name,
+                norad_id=deb.norad_id,
+                source=deb.source,
+                orbit_type=deb.orbit_type,
+                latest_tle_epoch=(
+                    latest_tle.epoch.isoformat()
+                    if latest_tle and latest_tle.epoch
+                    else None
+                ),
+            )
+        )
     return results
