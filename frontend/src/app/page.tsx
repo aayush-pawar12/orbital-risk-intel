@@ -2,17 +2,17 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { api, Satellite, DebrisObj, AssessResponse, PredictResponse, SystemStatus, AutoResponse } from '@/lib/api';
-import Header from '@/components/Header';
-import StatusBar from '@/components/StatusBar';
-import OverviewPanel from '@/components/OverviewPanel';
-import RiskPanel from '@/components/RiskPanel';
-import GlobePanel from '@/components/GlobePanel';
-import TimelineChart from '@/components/TimelineChart';
-import ClosestApproachPanel from '@/components/ClosestApproachPanel';
-import VectorPanel from '@/components/VectorPanel';
-import SatelliteMapPanel from '@/components/SatelliteMapPanel';
-import EmergencyResponsePanel from '@/components/EmergencyResponsePanel';
-import AuditTrailModal from '@/components/AuditTrailModal';
+import Header from '@/components/layout/Header';
+import StatusBar from '@/components/layout/StatusBar';
+import OverviewPanel from '@/components/panels/OverviewPanel';
+import RiskPanel from '@/components/panels/RiskPanel';
+import GlobePanel from '@/components/visualizations/GlobePanel';
+import TimelineChart from '@/components/visualizations/TimelineChart';
+import ClosestApproachPanel from '@/components/panels/ClosestApproachPanel';
+import VectorPanel from '@/components/visualizations/VectorPanel';
+import SatelliteMapPanel from '@/components/visualizations/SatelliteMapPanel';
+import EmergencyResponsePanel from '@/components/panels/EmergencyResponsePanel';
+import AuditTrailModal from '@/components/modals/AuditTrailModal';
 import { Shield, AlertTriangle } from 'lucide-react';
 
 export default function Dashboard() {

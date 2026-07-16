@@ -22,13 +22,19 @@ def list_satellites(db: Session = Depends(get_db)):
             .order_by(TLERecord.created_at.desc())
             .first()
         )
-        results.append(SatelliteOut(
-            id=sat.id,
-            name=sat.name,
-            norad_id=sat.norad_id,
-            operator=sat.operator,
-            orbit_type=sat.orbit_type,
-            active=sat.active,
-            latest_tle_epoch=latest_tle.epoch.isoformat() if latest_tle and latest_tle.epoch else None,
-        ))
+        results.append(
+            SatelliteOut(
+                id=sat.id,
+                name=sat.name,
+                norad_id=sat.norad_id,
+                operator=sat.operator,
+                orbit_type=sat.orbit_type,
+                active=sat.active,
+                latest_tle_epoch=(
+                    latest_tle.epoch.isoformat()
+                    if latest_tle and latest_tle.epoch
+                    else None
+                ),
+            )
+        )
     return results

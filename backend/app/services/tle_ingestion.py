@@ -29,7 +29,9 @@ def _parse_tle_epoch(line1: str) -> Optional[datetime]:
         year_2d = int(epoch_str[:2])
         day_frac = float(epoch_str[2:])
         year = 2000 + year_2d if year_2d < 57 else 1900 + year_2d
-        epoch = datetime(year, 1, 1, tzinfo=timezone.utc) + __import__("datetime").timedelta(days=day_frac - 1)
+        epoch = datetime(year, 1, 1, tzinfo=timezone.utc) + __import__(
+            "datetime"
+        ).timedelta(days=day_frac - 1)
         return epoch
     except Exception as e:
         logger.warning(f"Failed to parse TLE epoch: {e}")
@@ -61,7 +63,9 @@ async def fetch_tle_from_celestrak(norad_id: int) -> Optional[tuple[str, str, st
                 # Some responses omit the name line
                 return (f"NORAD-{norad_id}", lines[0].strip(), lines[1].strip())
             else:
-                logger.warning(f"Unexpected TLE format for NORAD ID {norad_id}: {text[:200]}")
+                logger.warning(
+                    f"Unexpected TLE format for NORAD ID {norad_id}: {text[:200]}"
+                )
                 return None
     except httpx.HTTPError as e:
         logger.error(f"HTTP error fetching TLE for NORAD ID {norad_id}: {e}")

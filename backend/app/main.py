@@ -4,7 +4,6 @@ Orbital Risk Intelligence System – Real-Time Space Debris
 Collision Assessment Platform.
 """
 
-import asyncio
 import logging
 from contextlib import asynccontextmanager
 
@@ -37,6 +36,7 @@ async def lifespan(app: FastAPI):
     # Seed the database and ensure fallback TLE records exist
     from app.models import Satellite
     from seed_data import seed_database, ensure_fallback_tles
+
     db = SessionLocal()
     try:
         if db.query(Satellite).count() == 0:

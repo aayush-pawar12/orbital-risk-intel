@@ -39,7 +39,9 @@ def start_scheduler():
         replace_existing=True,
     )
     scheduler.start()
-    logger.info(f"TLE refresh scheduler started (interval: {settings.TLE_REFRESH_INTERVAL}s)")
+    logger.info(
+        f"TLE refresh scheduler started (interval: {settings.TLE_REFRESH_INTERVAL}s)"
+    )
 
 
 def stop_scheduler():
