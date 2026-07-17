@@ -85,12 +85,9 @@ export default function App() {
       <footer className="relative z-10 border-t border-neutral-200/20 dark:border-white/5 py-10 bg-neutral-100/30 dark:bg-neutral-950/30 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 md:px-16 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-mono text-neutral-500 dark:text-neutral-400">
           <span>
-            © {new Date().getFullYear()} ORBITAL RISK INTELLIGENCE SYSTEM // ALL ASSETS SEALED SECURE
+            © {new Date().getFullYear()} ORIS All Rights Reserved.
           </span>
-          <div className="flex gap-4">
-            <span className="hover:text-rose-500 transition-colors">LATENCY: &lt;1.2MS</span>
-            <span>NODE ID: ORIS_US_CORE_09</span>
-          </div>
+
         </div>
       </footer>
     </div>

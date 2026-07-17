@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Bolt, HardDrive, ShieldCheck, Zap } from "lucide-react";
+import { Database, Activity, Crosshair, Play, Circle } from "lucide-react";
+import { motion } from "motion/react";
 
 interface OperationalProcedureProps {
   onLaunchMissionControl: () => void;
@@ -11,27 +12,30 @@ export default function OperationalProcedure({ onLaunchMissionControl }: Operati
   const steps = [
     {
       num: "01",
-      title: "Telemetry Analysis",
-      desc: "Ingesting live high-frequency sensor feeds and ephemeris vectors via the encrypted ORIS core link.",
-      badge: "Ingress",
-      colorClass: "border-red-600 dark:border-rose-500",
-      icon: <Zap className="w-4 h-4 text-rose-500" />
+      title: "Data Ingestion",
+      desc: "Import TLEs, CDMs, ephemerides, and sensor observations from integrated tracking providers.",
+      chip: "INPUT",
+      metric: "12ms latency",
+      timestamp: "T-0:00:00",
+      icon: <Database className="w-4 h-4 text-neutral-400" />
     },
     {
       num: "02",
-      title: "Conjunction Assessment",
-      desc: "Cross-verifying target vectors against international catalog indices and secondary debris clusters.",
-      badge: "Analysis",
-      colorClass: "border-blue-500 dark:border-blue-400",
-      icon: <HardDrive className="w-4 h-4 text-blue-400" />
+      title: "Risk Assessment",
+      desc: "Propagate orbital trajectories, detect close approaches, and calculate probability of collision using validated orbital mechanics models.",
+      chip: "PROCESSING",
+      metric: "145ms compute",
+      timestamp: "T+0:00:12",
+      icon: <Activity className="w-4 h-4 text-neutral-400" />
     },
     {
       num: "03",
-      title: "Maneuver Execution",
-      desc: "Deploying autonomous station-keeping delta-V evasion bursts with real-time telemetry verification.",
-      badge: "Execution",
-      colorClass: "border-emerald-500 dark:border-emerald-400",
-      icon: <ShieldCheck className="w-4 h-4 text-emerald-400" />
+      title: "Mitigation Planning",
+      desc: "Generate fuel-efficient maneuver candidates, compare projected outcomes, and present the recommended avoidance strategy for operator approval.",
+      chip: "OUTPUT",
+      metric: "98.7% confidence",
+      timestamp: "T+0:01:45",
+      icon: <Crosshair className="w-4 h-4 text-neutral-400" />
     }
   ];
 
@@ -44,66 +48,98 @@ export default function OperationalProcedure({ onLaunchMissionControl }: Operati
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
           {/* Left Column: Intersecting vertical step nodes */}
-          <div className="flex flex-col items-center justify-center gap-4 order-2 lg:order-1">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-col items-start justify-center gap-0 order-2 lg:order-1 relative"
+          >
+            {/* Pipeline Status Indicator */}
+            <div className="flex items-center gap-2 mb-8 ml-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
+                Pipeline Status: Online
+              </span>
+            </div>
+
             {steps.map((step, idx) => (
               <React.Fragment key={idx}>
                 {/* Step Card */}
                 <div
                   onClick={() => setActiveStep(idx)}
-                  className={`w-full max-w-md p-6 bg-neutral-100/40 dark:bg-neutral-950/40 backdrop-blur-xl rounded-2xl flex items-start gap-6 border-l-4 transition-all duration-300 cursor-pointer shadow-lg hover:translate-x-2 ${
-                    step.colorClass
-                  } ${
+                  className={`w-full max-w-md p-5 bg-neutral-100/40 dark:bg-neutral-950/40 backdrop-blur-xl rounded-xl flex items-start gap-4 border transition-all duration-300 cursor-pointer ${
                     activeStep === idx
-                      ? "border border-neutral-300 dark:border-white/20 bg-neutral-200/50 dark:bg-white/5 shadow-2xl"
-                      : "border border-neutral-300/20 dark:border-white/5 opacity-80"
+                      ? "border-neutral-400/50 dark:border-white/20 bg-neutral-200/50 dark:bg-white/10 shadow-lg ml-2"
+                      : "border-neutral-300/20 dark:border-white/5 opacity-60 hover:opacity-100"
                   }`}
                 >
-                  <div className="w-10 h-10 rounded-full bg-neutral-200 dark:bg-white/5 flex items-center justify-center font-bold text-neutral-800 dark:text-neutral-200">
-                    {step.num}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[9px] font-bold tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
-                        {step.title}
-                      </span>
-                      {step.icon}
+                  <div className="flex flex-col items-center gap-2 mt-1">
+                    <div className="w-8 h-8 rounded-full border border-neutral-400/30 flex items-center justify-center font-mono text-[10px] text-neutral-500 dark:text-neutral-400">
+                      {step.num}
                     </div>
-                    <p className="text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                  </div>
+                  
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        {step.icon}
+                        <h3 className="text-sm font-bold tracking-wide uppercase text-neutral-800 dark:text-neutral-200">
+                          {step.title}
+                        </h3>
+                      </div>
+                      <span className="px-2 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-neutral-300">
+                        {step.chip}
+                      </span>
+                    </div>
+                    
+                    <p className="text-[11px] text-neutral-600 dark:text-neutral-400 leading-relaxed mb-3">
                       {step.desc}
                     </p>
+
+                    <div className="flex items-center justify-between border-t border-neutral-300/30 dark:border-white/5 pt-2">
+                      <span className="text-[9px] font-mono text-neutral-500">{step.timestamp}</span>
+                      <span className="text-[9px] font-mono text-neutral-500">{step.metric}</span>
+                    </div>
                   </div>
                 </div>
 
                 {/* Vertical Connector Path */}
                 {idx < steps.length - 1 && (
-                  <div className="w-px h-10 bg-gradient-to-b from-neutral-400/50 dark:from-white/10 to-transparent"></div>
+                  <div className="w-px h-6 bg-neutral-400/30 dark:bg-white/10 ml-8 my-1"></div>
                 )}
               </React.Fragment>
             ))}
-          </div>
+          </motion.div>
 
           {/* Right Column: Title, paragraph, and CTA */}
-          <div className="flex flex-col justify-center order-1 lg:order-2">
-            <div className="text-rose-500 dark:text-rose-400 text-xs font-bold tracking-[0.3em] uppercase mb-4 flex items-center gap-2">
-              <Bolt className="w-4 h-4 text-rose-500 animate-pulse" />
-              Protocol Execution
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex flex-col justify-center order-1 lg:order-2"
+          >
+            <div className="text-neutral-500 dark:text-neutral-400 text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-2">
+              <Circle className="w-3 h-3 text-neutral-400" />
+              SYSTEM WORKFLOW
             </div>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-neutral-900 dark:text-white mb-6 uppercase tracking-tight leading-tight">
-              Operational<br />Procedure
+            <h2 className="text-3xl md:text-5xl font-extrabold text-neutral-900 dark:text-white mb-6 uppercase tracking-tight leading-tight">
+              Collision Assessment<br />Pipeline
             </h2>
             <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base leading-relaxed mb-8">
-              ORIS operates on a highly secure, closed-loop autonomous cycle. From the microsecond anomaly triggers are detected in real-time sensor streams, our neural engines execute a series of high-fidelity conjunction calculations. The system packages optimized, ready-to-run maneuver profiles, sealing them into the immutable audit network and delivering options to aerospace operators in milliseconds.
+              ORIS continuously processes orbital state vectors, conjunction messages, and tracking observations to evaluate collision probability. When predefined risk thresholds are exceeded, the system generates maneuver recommendations and records every decision for operator review.
             </p>
             
             <button
               onClick={onLaunchMissionControl}
               id="view-workflow-btn"
-              className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/35 text-rose-200 backdrop-blur-md px-8 py-4 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-3 w-fit transition-all duration-300 shadow-lg shadow-rose-950/20 hover:scale-[1.03] cursor-pointer"
+              className="bg-neutral-200/50 hover:bg-neutral-300/50 dark:bg-white/5 dark:hover:bg-white/10 border border-neutral-300/50 dark:border-white/10 text-neutral-800 dark:text-neutral-200 backdrop-blur-md px-6 py-3 rounded-md text-xs font-mono uppercase tracking-widest flex items-center gap-3 w-fit transition-all duration-300 shadow-lg cursor-pointer"
             >
-              Launch Mission Control
-              <Bolt className="w-4 h-4 text-rose-300 animate-bounce" />
+              <Play className="w-3 h-3" />
+              View Simulation
             </button>
-          </div>
+          </motion.div>
 
         </div>
       </div>
