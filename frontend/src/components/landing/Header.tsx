@@ -27,25 +27,25 @@ export default function Header({
             className="text-xs font-semibold tracking-wider uppercase text-neutral-400 hover:text-rose-400 transition-colors"
             href="#issue"
           >
-            Issue
+            Context
           </a>
           <a
             className="text-xs font-semibold tracking-wider uppercase text-neutral-400 hover:text-rose-400 transition-colors"
             href="#strategy"
           >
-            Strategy
+            Services
           </a>
           <a
             className="text-xs font-semibold tracking-wider uppercase text-neutral-400 hover:text-rose-400 transition-colors"
             href="#operational"
           >
-            Operational
+            Pipeline
           </a>
           <a
             className="text-xs font-semibold tracking-wider uppercase text-neutral-400 hover:text-rose-400 transition-colors"
             href="#ledger"
           >
-            Ledger
+            Audit Trail
           </a>
         </div>
 
@@ -58,7 +58,7 @@ export default function Header({
             className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-200 backdrop-blur-md px-5 py-2 rounded-full text-xs font-bold tracking-wider uppercase transition-all duration-300 transform hover:scale-[1.03] active:scale-95 shadow-lg flex items-center gap-1.5 cursor-pointer"
           >
             <Terminal className="w-3.5 h-3.5 animate-pulse" />
-            {isMissionControlOpen ? "Exit Workspace" : "Launch Mission Control"}
+            {isMissionControlOpen ? "Exit Workspace" : "Access Operations"}
           </button>
         </div>
       </div>

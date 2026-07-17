@@ -29,20 +29,20 @@ export default function Starfield({}: StarfieldProps) {
     // Initialize stars
     const initStars = () => {
       stars = [];
-      const numStars = Math.floor((width * height) / 3000);
+      const numStars = Math.floor((width * height) / 8000);
       for (let i = 0; i < numStars; i++) {
         stars.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          size: Math.random() * 1.5 + 0.5,
-          twinkleSpeed: 0.01 + Math.random() * 0.03,
+          size: Math.random() * 0.8 + 0.2,
+          twinkleSpeed: 0.005 + Math.random() * 0.015,
           phase: Math.random() * Math.PI * 2,
           color:
-            Math.random() > 0.8
-              ? "rgba(172, 199, 255, 0.9)" // Soft Cyan / Blue accent
-              : Math.random() > 0.9
-              ? "rgba(255, 179, 176, 0.9)" // Rose / Red accent
-              : "rgba(255, 255, 255, 0.85)", // White
+            Math.random() > 0.95
+              ? "rgba(172, 199, 255, 0.5)" // Soft Cyan / Blue accent
+              : Math.random() > 0.98
+              ? "rgba(255, 179, 176, 0.5)" // Rose / Red accent
+              : "rgba(255, 255, 255, 0.4)", // White
         });
       }
     };
@@ -60,24 +60,14 @@ export default function Starfield({}: StarfieldProps) {
     const animate = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Draw deep-space gradient
-      const bgGrad = ctx.createRadialGradient(
-        width / 2,
-        height / 2,
-        10,
-        width / 2,
-        height / 2,
-        Math.max(width, height)
-      );
-      bgGrad.addColorStop(0, "#030a16");
-      bgGrad.addColorStop(1, "#000308");
-      ctx.fillStyle = bgGrad;
+      // Draw deep-space background
+      ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, width, height);
 
       // Animate stars
       for (const star of stars) {
         star.phase += star.twinkleSpeed;
-        const alpha = 0.3 + Math.abs(Math.sin(star.phase)) * 0.7;
+        const alpha = 0.1 + Math.abs(Math.sin(star.phase)) * 0.4;
 
         ctx.fillStyle = star.color.replace(/[\d.]+\)$/, `${alpha})`);
         ctx.beginPath();
