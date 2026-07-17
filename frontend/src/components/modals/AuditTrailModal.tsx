@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { api, IncidentRecord, AuditLogResponse } from '@/lib/api';
-import { Shield, Lock, FileText, CheckCircle, AlertTriangle, X, RefreshCw, Hash, ChevronRight } from 'lucide-react';
+import { Shield, Lock, AlertTriangle, X, RefreshCw, Hash } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -26,8 +26,8 @@ export default function AuditTrailModal({ isOpen, onClose }: Props) {
       ]);
       setAuditData(auditRes);
       setIncidents(incRes);
-    } catch (e: any) {
-      setError(`Failed to load audit records: ${e.message}`);
+    } catch (e) {
+      setError(`Failed to load audit records: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setLoading(false);
     }

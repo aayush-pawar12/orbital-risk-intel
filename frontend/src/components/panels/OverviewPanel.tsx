@@ -1,7 +1,7 @@
 'use client';
 
 import { Satellite, DebrisObj } from '@/lib/api';
-import { Satellite as SatIcon, Trash2, Radio, Globe2 } from 'lucide-react';
+import { Satellite as SatIcon, Trash2, Globe2 } from 'lucide-react';
 
 interface Props {
     satellite: Satellite | null;
@@ -13,7 +13,7 @@ export default function OverviewPanel({ satellite, debris, loading }: Props) {
     if (loading) {
         return (
             <div className="card">
-                <PanelHeader title="OBJECT OVERVIEW" icon="overview" />
+                <PanelHeader title="OBJECT OVERVIEW" />
                 <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                     <div className="skeleton" style={{ height: '140px', flex: 1 }} />
                     <div className="skeleton" style={{ height: '140px', flex: 1 }} />
@@ -24,7 +24,7 @@ export default function OverviewPanel({ satellite, debris, loading }: Props) {
 
     return (
         <div className="card animate-fade-in">
-            <PanelHeader title="OBJECT OVERVIEW" icon="overview" />
+            <PanelHeader title="OBJECT OVERVIEW" />
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                 {/* Satellite Card */}
                 <div style={{
@@ -92,7 +92,7 @@ export default function OverviewPanel({ satellite, debris, loading }: Props) {
     );
 }
 
-function PanelHeader({ title, icon }: { title: string; icon: string }) {
+function PanelHeader({ title }: { title: string }) {
     return (
         <div style={{
             display: 'flex',

@@ -1,5 +1,13 @@
+import path from 'path';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Pin the workspace root to this directory so Turbopack doesn't misdetect
+  // it from stray lockfiles in parent directories.
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
+
   // Disable source maps in production to protect code
   productionBrowserSourceMaps: false,
 

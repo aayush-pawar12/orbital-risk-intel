@@ -1,7 +1,7 @@
 'use client';
 
 import { PredictResponse } from '@/lib/api';
-import { TrendingDown, Clock } from 'lucide-react';
+import { TrendingDown } from 'lucide-react';
 import {
     ResponsiveContainer, AreaChart, Area, XAxis, YAxis,
     CartesianGrid, Tooltip, ReferenceLine,
@@ -53,8 +53,6 @@ export default function TimelineChart({ prediction, loading }: Props) {
         fullTime: point.time_utc,
         index: idx,
     }));
-
-    const minDist = prediction.min_distance_km;
 
     return (
         <div className="card animate-fade-in">
@@ -108,7 +106,7 @@ export default function TimelineChart({ prediction, loading }: Props) {
                             }}
                             labelStyle={{ color: '#8b95a8' }}
                             itemStyle={{ color: '#e8ecf4' }}
-                            formatter={((value: any) => [`${Number(value).toFixed(2)} km`, 'Distance']) as any}
+                            formatter={(value?: number) => [`${(value ?? 0).toFixed(2)} km`, 'Distance']}
                         />
                         <ReferenceLine
                             y={1}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/landing/Header";
 import Starfield from "@/components/landing/Starfield";
@@ -13,10 +13,10 @@ import { LedgerBlock } from "@/lib/landing-types";
 
 export default function App() {
   const router = useRouter();
-  const [satelliteCount, setSatelliteCount] = useState(4500);
+  const satelliteCount = 4500;
 
   // Seed default chronological ledger blocks mirroring the screenshots
-  const [blocks, setBlocks] = useState<LedgerBlock[]>([
+  const blocks: LedgerBlock[] = [
     {
       id: "BLK_9934",
       blockNumber: 9934,
@@ -47,7 +47,7 @@ export default function App() {
       prevHash: "SHA256: f193da4c2e1160a9f0ac2ea9bc15d48da2a4fc019",
       validatorNode: "ORIS-GATEWAY-04"
     }
-  ]);
+  ];
 
   // Set dark theme on mount
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Satellite, ShieldAlert, Rocket, ChevronRight, Sparkles, AlertCircle } from "lucide-react";
+import { Satellite, ShieldAlert, Rocket, ChevronRight, AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
 
 interface HeroProps {

@@ -2,8 +2,7 @@
 
 import { AutoResponse } from '@/lib/api';
 import {
-    AlertTriangle, Shield, Link2, FileCheck, Zap,
-    Hash, Clock, DollarSign, Fuel, ChevronRight,
+    AlertTriangle, Shield, Link2, FileCheck, Zap, ChevronRight,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -12,19 +11,19 @@ interface Props {
 }
 
 export default function EmergencyResponsePanel({ autoResponse }: Props) {
-    const [visible, setVisible] = useState(false);
+    if (!autoResponse || !autoResponse.auto_response_triggered) return null;
+
+    // Remounted per incident (via `key`) so the flash starts fresh for every new trigger.
+    return <ResponsePanelContent key={autoResponse.incident_id} autoResponse={autoResponse} />;
+}
+
+function ResponsePanelContent({ autoResponse }: { autoResponse: AutoResponse }) {
     const [flash, setFlash] = useState(true);
 
     useEffect(() => {
-        if (autoResponse?.auto_response_triggered) {
-            setVisible(true);
-            setFlash(true);
-            const timer = setTimeout(() => setFlash(false), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [autoResponse]);
-
-    if (!autoResponse || !autoResponse.auto_response_triggered) return null;
+        const timer = setTimeout(() => setFlash(false), 3000);
+        return () => clearTimeout(timer);
+    }, []);
 
     const { blockchain_proof, mitigation, audit_trail } = autoResponse;
 

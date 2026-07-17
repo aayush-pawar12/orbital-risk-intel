@@ -98,15 +98,15 @@ export default function LedgerSection({ blocks }: LedgerSectionProps) {
             </div>
 
             <div className="bg-neutral-100 dark:bg-neutral-900 p-4 rounded-xl font-mono text-xs text-neutral-800 dark:text-neutral-300 overflow-x-auto border border-neutral-300/40 dark:border-white/5 space-y-2">
-              <p><span className="text-rose-500">"block_id":</span> "{selectedBlock.id}"</p>
-              <p><span className="text-rose-500">"sequence_index":</span> {selectedBlock.blockNumber}</p>
-              <p><span className="text-rose-500">"sealed_timestamp":</span> "{selectedBlock.timestamp}"</p>
-              <p><span className="text-rose-500">"action_taken":</span> "{selectedBlock.actionTaken}"</p>
-              <p><span className="text-rose-500">"target_body":</span> "{selectedBlock.targetSatellite}"</p>
-              <p><span className="text-rose-500">"cryptographic_hash":</span> "{selectedBlock.hash}"</p>
-              <p><span className="text-rose-500">"parent_block_hash":</span> "{selectedBlock.prevHash}"</p>
-              <p><span className="text-rose-500">"verification_signature":</span> "{selectedBlock.validatorNode}"</p>
-              <p><span className="text-rose-500">"status":</span> "SECURE_NOMINAL"</p>
+              <p><span className="text-rose-500">&quot;block_id&quot;:</span> &quot;{selectedBlock.id}&quot;</p>
+              <p><span className="text-rose-500">&quot;sequence_index&quot;:</span> {selectedBlock.blockNumber}</p>
+              <p><span className="text-rose-500">&quot;sealed_timestamp&quot;:</span> &quot;{selectedBlock.timestamp}&quot;</p>
+              <p><span className="text-rose-500">&quot;action_taken&quot;:</span> &quot;{selectedBlock.actionTaken}&quot;</p>
+              <p><span className="text-rose-500">&quot;target_body&quot;:</span> &quot;{selectedBlock.targetSatellite}&quot;</p>
+              <p><span className="text-rose-500">&quot;cryptographic_hash&quot;:</span> &quot;{selectedBlock.hash}&quot;</p>
+              <p><span className="text-rose-500">&quot;parent_block_hash&quot;:</span> &quot;{selectedBlock.prevHash}&quot;</p>
+              <p><span className="text-rose-500">&quot;verification_signature&quot;:</span> &quot;{selectedBlock.validatorNode}&quot;</p>
+              <p><span className="text-rose-500">&quot;status&quot;:</span> &quot;SECURE_NOMINAL&quot;</p>
             </div>
 
             <div className="mt-6 flex justify-end">

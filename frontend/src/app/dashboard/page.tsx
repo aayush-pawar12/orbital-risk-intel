@@ -53,7 +53,7 @@ export default function Dashboard() {
         setApiOnline(true);
         if (sats.length > 0) setSelectedSatId(sats[0].id);
         if (debs.length > 0) setSelectedDebId(debs[0].id);
-      } catch (e: any) {
+      } catch {
         setError('Cannot connect to backend API. The server may be waking up — please wait 30 seconds and refresh.');
         setApiOnline(false);
       } finally {
@@ -71,8 +71,8 @@ export default function Dashboard() {
     try {
       const result = await api.assess(selectedSatId, selectedDebId);
       setAssessment(result);
-    } catch (e: any) {
-      setError(`Assessment failed: ${e.message}`);
+    } catch (e) {
+      setError(`Assessment failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setAssessing(false);
     }
@@ -86,8 +86,8 @@ export default function Dashboard() {
     try {
       const result = await api.predict(selectedSatId, selectedDebId);
       setPrediction(result);
-    } catch (e: any) {
-      setError(`Prediction failed: ${e.message}`);
+    } catch (e) {
+      setError(`Prediction failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setPredicting(false);
     }
@@ -101,8 +101,8 @@ export default function Dashboard() {
     try {
       const result = await api.simulateDrill(selectedSatId, selectedDebId);
       setAssessment(result);
-    } catch (e: any) {
-      setError(`Drill simulation failed: ${e.message}`);
+    } catch (e) {
+      setError(`Drill simulation failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setSimulatingDrill(false);
     }

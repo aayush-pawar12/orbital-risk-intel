@@ -1,7 +1,7 @@
 'use client';
 
 import { AssessResponse } from '@/lib/api';
-import { Crosshair, ArrowUpRight } from 'lucide-react';
+import { Crosshair } from 'lucide-react';
 
 interface Props {
     assessment: AssessResponse | null;

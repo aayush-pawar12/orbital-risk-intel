@@ -1,6 +1,5 @@
 import React from "react";
-import { ShieldAlert, Zap, Layers } from "lucide-react";
-import { motion } from "motion/react";
+import { Layers } from "lucide-react";
 
 export default function IssueDescription() {
   return (

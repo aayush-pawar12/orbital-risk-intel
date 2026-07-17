@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from "react";
 
-interface StarfieldProps {}
-
 interface Star {
   x: number;
   y: number;
@@ -11,7 +9,7 @@ interface Star {
   color: string;
 }
 
-export default function Starfield({}: StarfieldProps) {
+export default function Starfield() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {

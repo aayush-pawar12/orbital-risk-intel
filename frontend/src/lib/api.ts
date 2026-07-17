@@ -27,6 +27,13 @@ export interface IncidentRecord {
   created_at: string;
 }
 
+export interface AuditBlockData {
+  satellite?: string;
+  debris?: string;
+  distance_km?: number;
+  mitigation_contract?: string;
+}
+
 export interface AuditLogEntry {
   id: number;
   incident_id: string;
@@ -35,7 +42,7 @@ export interface AuditLogEntry {
   prev_hash: string;
   tx_hash: string;
   verification_status: string;
-  block_data: any;
+  block_data: AuditBlockData;
   created_at: string;
 }
 

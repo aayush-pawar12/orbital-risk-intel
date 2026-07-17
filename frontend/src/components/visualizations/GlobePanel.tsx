@@ -11,8 +11,8 @@ interface Props {
     assessment: AssessResponse | null;
 }
 
-const EARTH_RADIUS = 6371; // km
-const SCALE = 1 / 6371; // Normalize to unit sphere
+const EARTH_RADIUS_KM = 6371;
+const SCALE = 1 / EARTH_RADIUS_KM; // Normalize to unit sphere
 
 function Earth() {
     const meshRef = useRef<THREE.Mesh>(null);
@@ -56,10 +56,9 @@ function Earth() {
     );
 }
 
-function SatelliteMarker({ position, color, label }: {
+function SatelliteMarker({ position, color }: {
     position: [number, number, number];
     color: string;
-    label: string;
 }) {
     const meshRef = useRef<THREE.Mesh>(null);
 
@@ -127,8 +126,8 @@ function Scene({ assessment }: { assessment: AssessResponse | null }) {
             <pointLight position={[-5, -3, -5]} intensity={0.3} color="#4a7dff" />
 
             <Earth />
-            <SatelliteMarker position={satPos} color="#00d4ff" label="SAT" />
-            <SatelliteMarker position={debPos} color="#ff9500" label="DEB" />
+            <SatelliteMarker position={satPos} color="#00d4ff" />
+            <SatelliteMarker position={debPos} color="#ff9500" />
             <ConnectionLine start={satPos} end={debPos} color={lineColor} />
 
             <OrbitControls
