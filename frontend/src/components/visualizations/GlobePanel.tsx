@@ -176,9 +176,13 @@ function Scene({ assessment }: { assessment: AssessResponse | null }) {
             <BackgroundDebris />
 
             <Earth />
-            <SatelliteMarker position={satPos} color="#3b82f6" />
-            <SatelliteMarker position={debPos} color="#f59e0b" />
-            <ConnectionLine start={satPos} end={debPos} color={lineColor} />
+            {assessment && (
+                <>
+                    <SatelliteMarker position={satPos} color="#3b82f6" />
+                    <SatelliteMarker position={debPos} color="#f59e0b" />
+                    <ConnectionLine start={satPos} end={debPos} color={lineColor} />
+                </>
+            )}
 
             <OrbitControls
                 enableZoom
