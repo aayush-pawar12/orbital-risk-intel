@@ -1,5 +1,5 @@
 import React from "react";
-import { Layers, Crosshair, Gauge, Activity, RadioReceiver, ShieldAlert } from "lucide-react";
+import { Layers, Crosshair, Gauge, Activity } from "lucide-react";
 import { motion } from "motion/react";
 
 export default function IssueDescription() {
@@ -20,45 +20,45 @@ export default function IssueDescription() {
         >
           <div className="text-neutral-500 dark:text-neutral-400 text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-2">
             <Layers className="w-4 h-4 text-neutral-400" />
-            MISSION CONTEXT
+            OPERATIONAL CONTEXT
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold leading-tight text-neutral-900 dark:text-white mb-6 tracking-tight uppercase">
-            Increasing Congestion<br />in Low Earth Orbit
+            LEO Congestion &<br />Collision Risk
           </h2>
           <p className="text-sm md:text-base text-neutral-600 dark:text-neutral-400 leading-relaxed mb-8">
-            The rapid expansion of commercial satellite constellations has significantly increased orbital traffic within Low Earth Orbit (LEO). As the number of active spacecraft and tracked debris objects grows, conjunction events occur more frequently, reducing available reaction time for satellite operators. Accurate collision assessment and timely maneuver planning have become essential for maintaining mission safety and operational continuity.
+            The proliferation of commercial constellations and orbital debris has degraded operational safety margins in Low Earth Orbit (LEO). High-velocity conjunction events require continuous Conjunction Assessment (CA), accurate orbit determination, and timely avoidance maneuver planning to maintain asset survivability and mission continuity.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Stat Box 1 */}
             <div className="bg-neutral-100/40 dark:bg-neutral-950/40 backdrop-blur-xl p-6 rounded-xl border border-neutral-300/40 dark:border-white/10 hover:border-neutral-400/60 dark:hover:border-white/20 transition-all duration-300 hover:-translate-y-1 shadow-lg group">
               <div className="flex items-center gap-2 mb-3">
-                <Crosshair className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <Crosshair className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <div className="text-[10px] font-bold text-neutral-600 dark:text-neutral-300 uppercase tracking-widest">
-                  Tracked Debris Objects
+                  Cataloged RSOs
                 </div>
               </div>
-              <div className="text-blue-700 dark:text-blue-400 text-3xl font-extrabold font-mono mb-2">
+              <div className="text-emerald-700 dark:text-emerald-400 text-3xl font-extrabold font-mono mb-2">
                 27,000+
               </div>
               <p className="text-[10px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                Objects ≥10 cm monitored by the global tracking network
+                Objects ≥10 cm tracked by the Space Surveillance Network (SSN)
               </p>
             </div>
 
             {/* Stat Box 2 */}
             <div className="bg-neutral-100/40 dark:bg-neutral-950/40 backdrop-blur-xl p-6 rounded-xl border border-neutral-300/40 dark:border-white/10 hover:border-neutral-400/60 dark:hover:border-white/20 transition-all duration-300 hover:-translate-y-1 shadow-lg group">
               <div className="flex items-center gap-2 mb-3">
-                <Gauge className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <Gauge className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <div className="text-[10px] font-bold text-neutral-600 dark:text-neutral-300 uppercase tracking-widest">
-                  Typical Relative Velocity
+                  Mean Relative Velocity
                 </div>
               </div>
-              <div className="text-blue-700 dark:text-blue-400 text-3xl font-extrabold font-mono mb-2">
+              <div className="text-emerald-700 dark:text-emerald-400 text-3xl font-extrabold font-mono mb-2">
                 7.8 km/s
               </div>
               <p className="text-[10px] text-neutral-500 dark:text-neutral-400 leading-relaxed">
-                Average closing velocity during LEO conjunction events
+                Average closing velocity during LEO conjunctions
               </p>
             </div>
           </div>
@@ -93,15 +93,15 @@ export default function IssueDescription() {
           </div>
 
           {/* Floating Top Badge */}
-          <div className="absolute top-6 right-6 inline-flex items-center gap-2 px-3 py-1.5 bg-neutral-200/80 dark:bg-neutral-800/80 backdrop-blur-md border border-neutral-300/50 dark:border-white/10 text-neutral-700 dark:text-neutral-300 rounded-md text-[9px] font-mono tracking-widest uppercase shadow-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-            Low Earth Orbit (LEO)
+          <div className="absolute top-6 right-6 inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-md text-[9px] font-mono tracking-widest uppercase shadow-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            LEO Regime
           </div>
 
           {/* Floating Data Overlay */}
           <div className="absolute bottom-6 left-6 p-4 bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-md border border-neutral-300/50 dark:border-white/10 rounded-lg shadow-lg flex flex-col gap-3 min-w-[180px]">
              <div className="flex justify-between items-center text-[10px] font-mono border-b border-neutral-300/50 dark:border-white/10 pb-2">
-                <span className="text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Active Satellites</span>
+                <span className="text-neutral-500 dark:text-neutral-400 uppercase tracking-widest">Active Payloads</span>
                 <span className="font-bold text-neutral-800 dark:text-neutral-200">8,420+</span>
              </div>
              <div className="flex justify-between items-center text-[10px] font-mono border-b border-neutral-300/50 dark:border-white/10 pb-2">
@@ -110,10 +110,10 @@ export default function IssueDescription() {
              </div>
              <div className="flex justify-between items-center text-[10px] font-mono">
                 <span className="text-neutral-500 dark:text-neutral-400 uppercase tracking-widest flex items-center gap-1">
-                   <Activity className="w-3 h-3 text-amber-500" />
+                   <Activity className="w-3 h-3 text-rose-500" />
                    Recent Events
                 </span>
-                <span className="font-bold text-amber-600 dark:text-amber-400">142</span>
+                <span className="font-bold text-rose-600 dark:text-rose-400">142</span>
              </div>
           </div>
         </motion.div>

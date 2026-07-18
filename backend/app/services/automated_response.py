@@ -33,7 +33,8 @@ def _generate_block_hash(data: dict, prev_hash: str) -> str:
 
 def _get_chain_prev_hash(db: Session) -> str:
     """Get the hash of the last audit log entry to form the chain."""
-    last_entry = db.query(AuditLog).order_by(AuditLog.created_at.desc()).first()
+    last_entry = db.query(AuditLog).order_by(
+        AuditLog.created_at.desc()).first()
     if last_entry and last_entry.block_hash:
         return last_entry.block_hash
     # Genesis block hash
@@ -76,7 +77,8 @@ def execute_critical_response(
         satellite_position=(
             json.dumps(satellite_position) if satellite_position else None
         ),
-        debris_position=json.dumps(debris_position) if debris_position else None,
+        debris_position=json.dumps(
+            debris_position) if debris_position else None,
         response_status="EXECUTED",
         mitigation_action="AUTOMATED_AVOIDANCE_MANEUVER_INITIATED",
     )
@@ -103,7 +105,8 @@ def execute_critical_response(
 
     block_hash = _generate_block_hash(block_data, prev_hash)
     tx_hash = (
-        "0x" + hashlib.sha256((incident_id + now.isoformat()).encode()).hexdigest()[:40]
+        "0x" + hashlib.sha256((incident_id + now.isoformat()
+                               ).encode()).hexdigest()[:40]
     )
 
     logger.info(f"  ✓ Blockchain proof generated: {block_hash[:16]}...")

@@ -42,7 +42,8 @@ def propagate_at(sat: EarthSatellite, dt: datetime) -> PropagationResult:
     Returns:
         PropagationResult with GCRS position and velocity
     """
-    t = _ts.from_datetime(dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt)
+    t = _ts.from_datetime(dt.replace(tzinfo=timezone.utc)
+                          if dt.tzinfo is None else dt)
     geocentric = sat.at(t)
 
     # Position in km (GCRS frame)

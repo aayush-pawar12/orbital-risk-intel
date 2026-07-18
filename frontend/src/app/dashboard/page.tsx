@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { api, Satellite, DebrisObj, AssessResponse, PredictResponse, SystemStatus, AutoResponse } from '@/lib/api';
+import Starfield from '@/components/landing/Starfield';
 import Header from '@/components/layout/Header';
-import StatusBar from '@/components/layout/StatusBar';
+
 import OverviewPanel from '@/components/panels/OverviewPanel';
 import RiskPanel from '@/components/panels/RiskPanel';
 import GlobePanel from '@/components/visualizations/GlobePanel';
@@ -13,7 +14,7 @@ import VectorPanel from '@/components/visualizations/VectorPanel';
 import SatelliteMapPanel from '@/components/visualizations/SatelliteMapPanel';
 import EmergencyResponsePanel from '@/components/panels/EmergencyResponsePanel';
 import AuditTrailModal from '@/components/modals/AuditTrailModal';
-import { Shield, AlertTriangle } from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 export default function Dashboard() {
   // ── Data state ──
@@ -33,7 +34,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [assessing, setAssessing] = useState(false);
   const [predicting, setPredicting] = useState(false);
-  const [simulatingDrill, setSimulatingDrill] = useState(false);
+  
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [apiOnline, setApiOnline] = useState(false);
@@ -53,7 +54,7 @@ export default function Dashboard() {
         setApiOnline(true);
         if (sats.length > 0) setSelectedSatId(sats[0].id);
         if (debs.length > 0) setSelectedDebId(debs[0].id);
-      } catch (e: any) {
+      } catch {
         setError('Cannot connect to backend API. The server may be waking up — please wait 30 seconds and refresh.');
         setApiOnline(false);
       } finally {
@@ -71,8 +72,8 @@ export default function Dashboard() {
     try {
       const result = await api.assess(selectedSatId, selectedDebId);
       setAssessment(result);
-    } catch (e: any) {
-      setError(`Assessment failed: ${e.message}`);
+    } catch (e: unknown) {
+      if (e instanceof Error) setError(`Assessment failed: ${e.message}`);
     } finally {
       setAssessing(false);
     }
@@ -86,27 +87,14 @@ export default function Dashboard() {
     try {
       const result = await api.predict(selectedSatId, selectedDebId);
       setPrediction(result);
-    } catch (e: any) {
-      setError(`Prediction failed: ${e.message}`);
+    } catch (e: unknown) {
+      if (e instanceof Error) setError(`Prediction failed: ${e.message}`);
     } finally {
       setPredicting(false);
     }
   }, [selectedSatId, selectedDebId]);
 
-  // ── Run emergency drill simulation (Core USP demo) ──
-  const runSimulationDrill = useCallback(async () => {
-    if (!selectedSatId || !selectedDebId) return;
-    setSimulatingDrill(true);
-    setError(null);
-    try {
-      const result = await api.simulateDrill(selectedSatId, selectedDebId);
-      setAssessment(result);
-    } catch (e: any) {
-      setError(`Drill simulation failed: ${e.message}`);
-    } finally {
-      setSimulatingDrill(false);
-    }
-  }, [selectedSatId, selectedDebId]);
+  
 
   const selectedSat = satellites.find(s => s.id === selectedSatId) || null;
   const selectedDeb = debris.find(d => d.id === selectedDebId) || null;
@@ -116,11 +104,13 @@ export default function Dashboard() {
     assessment?.auto_response || prediction?.auto_response || null;
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)' }}>
-      <Header />
-      <StatusBar status={status} apiOnline={apiOnline} />
+    <div className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-neutral-800 selection:text-white">
+      <Starfield />
+      <div className="relative z-10">
+      <Header status={status} apiOnline={apiOnline} />
+      
 
-      <main style={{ padding: '0 1.5rem 2rem', maxWidth: '1600px', margin: '0 auto' }}>
+      <main className="px-6 pb-8 max-w-[1600px] mx-auto">
         {error && (
           <div style={{
             background: 'var(--risk-critical-bg)',
@@ -139,33 +129,7 @@ export default function Dashboard() {
         {/* ╔══════════════════════════════════════════════╗ */}
         {/* ║  SECTION 1: GETTING STARTED                 ║ */}
         {/* ╚══════════════════════════════════════════════╝ */}
-        {!assessment && !prediction && (
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(74, 125, 255, 0.04))',
-            border: '1px solid rgba(0, 212, 255, 0.15)',
-            borderRadius: '12px',
-            padding: '1.25rem 1.5rem',
-            marginBottom: '1.25rem',
-          }}>
-            <h2 style={{
-              fontSize: '1rem', fontWeight: 700, margin: '0 0 0.5rem',
-              color: 'var(--accent-cyan)',
-            }}>
-              👋 How to Use This Platform
-            </h2>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '0.75rem',
-              marginTop: '0.75rem',
-            }}>
-              <StepCard step={1} title="Select Objects" desc="Choose a satellite and a debris object from the dropdowns below." />
-              <StepCard step={2} title="Run Assessment" desc='Click "RUN ASSESSMENT" to compute the real-time separation distance using SGP4 propagation.' />
-              <StepCard step={3} title="Predict TCA" desc='Click "PREDICT TCA" to find the closest approach point over the next 24 hours.' />
-              <StepCard step={4} title="Analyze Results" desc="Review the risk level, 3D positions, velocity vectors, and distance timeline below." />
-            </div>
-          </div>
-        )}
+
 
         {/* ╔══════════════════════════════════════════════╗ */}
         {/* ║  SECTION 2: OBJECT SELECTION & CONTROLS      ║ */}
@@ -241,28 +205,7 @@ export default function Dashboard() {
               {predicting ? '◌ PREDICTING...' : '◈ PREDICT TCA'}
             </button>
 
-            <button
-              onClick={runSimulationDrill}
-              disabled={simulatingDrill || loading || !selectedSatId || !selectedDebId}
-              style={{
-                whiteSpace: 'nowrap',
-                background: 'linear-gradient(135deg, #ff2d55, #ff5e3a)',
-                color: '#fff',
-                border: 'none',
-                padding: '0.6rem 1.1rem',
-                borderRadius: '8px',
-                fontWeight: 700,
-                fontSize: '0.78rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                boxShadow: '0 4px 14px rgba(255, 45, 85, 0.35)',
-              }}
-            >
-              <AlertTriangle size={14} />
-              {simulatingDrill ? '◌ DRILL IN PROGRESS...' : '🚨 EMERGENCY DRILL'}
-            </button>
+            
 
             <button
               onClick={() => setIsAuditModalOpen(true)}
@@ -368,6 +311,7 @@ export default function Dashboard() {
           onClose={() => setIsAuditModalOpen(false)}
         />
       </main>
+      </div>
     </div>
   );
 }

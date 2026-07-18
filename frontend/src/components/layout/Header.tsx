@@ -1,92 +1,58 @@
 'use client';
 
-import { Satellite as SatIcon, Shield } from 'lucide-react';
+import { SystemStatus } from '@/lib/api';
 
-export default function Header() {
+interface Props {
+    status: SystemStatus | null;
+    apiOnline: boolean;
+}
+
+export default function Header({ status, apiOnline }: Props) {
     return (
-        <header style={{
-            background: 'linear-gradient(180deg, rgba(10, 14, 23, 0.98) 0%, rgba(12, 18, 32, 0.95) 100%)',
-            borderBottom: '1px solid var(--border-primary)',
-            padding: '1rem 1.5rem',
-            position: 'sticky',
-            top: 0,
-            zIndex: 50,
-            backdropFilter: 'blur(12px)',
-        }}>
-            <div style={{
-                maxWidth: '1600px',
-                margin: '0 auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '10px',
-                        background: 'linear-gradient(135deg, var(--accent-cyan), var(--accent-blue))',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <Shield size={22} color="#fff" />
-                    </div>
-                    <div>
-                        <h1 style={{
-                            fontSize: '1.1rem',
-                            fontWeight: 700,
-                            margin: 0,
-                            letterSpacing: '0.03em',
-                            color: 'var(--text-primary)',
-                        }}>
-                            ORIS
-                        </h1>
-                        <p style={{
-                            fontSize: '0.6rem',
-                            fontWeight: 600,
-                            margin: 0,
-                            letterSpacing: '0.15em',
-                            textTransform: 'uppercase',
-                            color: 'var(--text-muted)',
-                        }}>
-                            Orbital Risk Intelligence System
-                        </p>
-                    </div>
+        <header className="sticky top-0 z-50 bg-[#171717] border-b border-neutral-800 px-6 py-3 flex items-center justify-between text-[11px] uppercase tracking-wider font-mono">
+            <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2 font-bold text-neutral-200">
+                    <span className="text-white">ORIS</span>
+                    <span className="text-neutral-700">|</span>
+                    <span className="text-neutral-400">MISSION CONTROL</span>
                 </div>
+                
+                <div className="h-4 w-px bg-neutral-800" />
+                
+                <div className="flex items-center gap-2 text-neutral-400">
+                    <div className={`w-1.5 h-1.5 rounded-full ${apiOnline ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                    <span>{apiOnline ? 'API Connected' : 'API Offline'}</span>
+                </div>
+            </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-                    <div style={{ textAlign: 'right' }}>
-                        <p className="label" style={{ margin: 0, marginBottom: '2px' }}>PROPAGATION MODEL</p>
-                        <p className="mono" style={{ margin: 0, fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>
-                            SGP4 / SDP4 — Skyfield
-                        </p>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                        <p className="label" style={{ margin: 0, marginBottom: '2px' }}>COORDINATE FRAME</p>
-                        <p className="mono" style={{ margin: 0, fontSize: '0.75rem', color: 'var(--accent-cyan)' }}>
-                            GCRS (ECI)
-                        </p>
-                    </div>
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '4px 10px',
-                        borderRadius: '6px',
-                        background: 'var(--risk-safe-bg)',
-                        border: '1px solid rgba(48, 209, 88, 0.3)',
-                    }}>
-                        <SatIcon size={14} color="var(--risk-safe)" />
-                        <span style={{
-                            fontFamily: "'JetBrains Mono', monospace",
-                            fontSize: '0.7rem',
-                            fontWeight: 600,
-                            color: 'var(--risk-safe)',
-                        }}>
-                            LIVE
-                        </span>
-                    </div>
+            <div className="flex items-center gap-6 text-neutral-400">
+                <div className="flex items-center gap-2">
+                    <span className="text-neutral-500">Objects</span>
+                    <span className="text-neutral-200">{status ? `${status.satellite_count} SAT · ${status.debris_count} DEB` : '—'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-neutral-500">TLE Database</span>
+                    <span className="text-neutral-200">{status ? `${status.tle_record_count} Records` : '—'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-neutral-500">Propagation</span>
+                    <span className="text-neutral-200">SGP4 / Skyfield</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-neutral-500">Frame</span>
+                    <span className="text-neutral-200">GCRS (ECI)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-neutral-500">Updated</span>
+                    <span className="text-neutral-200">
+                        {status?.last_tle_update
+                            ? new Date(status.last_tle_update).toLocaleString('en-US', {
+                                month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
+                                hour12: false, timeZoneName: 'short',
+                            })
+                            : '—'
+                        }
+                    </span>
                 </div>
             </div>
         </header>

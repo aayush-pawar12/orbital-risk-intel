@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { List, CheckCircle2, FileText, X, AlertCircle, PlayCircle, ShieldCheck } from "lucide-react";
+import { List, FileText, X, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
 import { LedgerBlock } from "@/lib/landing-types";
 
@@ -22,35 +22,35 @@ interface AuditEvent {
 const auditEvents: AuditEvent[] = [
   {
     id: "EVENT_10482",
-    title: "Conjunction Assessment Completed",
+    title: "Conjunction Assessment (CA) Computed",
     primaryDetail: "2026-07-14 14:26 UTC",
     status: "Verified",
     timestamp: "2026-07-14T14:26:00Z",
-    eventType: "TCA Computation",
+    eventType: "Orbit Propagation",
     riskLevel: "Low",
-    source: "USSPACECOM Catalog",
+    source: "Space Surveillance Network",
     operator: "Auto-System"
   },
   {
     id: "EVENT_10483",
-    title: "Collision Risk Updated",
+    title: "Probability of Collision (Pc) Updated",
     primaryDetail: "Probability: 0.0037",
     status: "Recorded",
     timestamp: "2026-07-14T14:26:02Z",
-    eventType: "Probability Analysis",
+    eventType: "Risk Assessment",
     riskLevel: "Elevated",
-    source: "ORIS Predictive AI",
+    source: "Orbital Assessment Engine",
     operator: "Auto-System"
   },
   {
     id: "EVENT_10484",
-    title: "Maneuver Recommendation Issued",
+    title: "Avoidance Maneuver Computed",
     primaryDetail: "ΔV Solution Generated",
     status: "Pending Review",
     timestamp: "2026-07-14T14:26:05Z",
-    eventType: "Mitigation Planning",
+    eventType: "Maneuver Planning",
     riskLevel: "High",
-    source: "ORIS Engine",
+    source: "Maneuver Optimization Module",
     operator: "Awaiting Input"
   }
 ];
@@ -76,9 +76,9 @@ export default function LedgerSection({ blocks }: LedgerSectionProps) {
           >
             {/* Audit Integrity Indicator */}
             <div className="flex items-center gap-2 mb-8 ml-2">
-              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-              <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
-                Audit Integrity: Verified
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span className="text-[10px] font-mono tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+                Log Integrity: Verified
               </span>
             </div>
 
@@ -105,8 +105,7 @@ export default function LedgerSection({ blocks }: LedgerSectionProps) {
                       </div>
                       <span className={`px-2 py-0.5 rounded text-[9px] font-bold tracking-widest uppercase ${
                         evt.status === "Verified" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" :
-                        evt.status === "Recorded" ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20" :
-                        "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                        "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20"
                       }`}>
                         {evt.status}
                       </span>
@@ -138,21 +137,21 @@ export default function LedgerSection({ blocks }: LedgerSectionProps) {
           >
             <div className="text-neutral-500 dark:text-neutral-400 text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-2">
               <List className="w-4 h-4 text-neutral-400" />
-              MISSION RECORDS
+              MISSION LOGS
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-neutral-900 dark:text-white mb-6 uppercase tracking-tight leading-tight">
-              Decision Audit<br />Trail
+              Immutable Operations<br />Log
             </h2>
             <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base leading-relaxed mb-8">
-              Every conjunction assessment, collision probability update, maneuver recommendation, operator acknowledgement, and execution outcome is automatically recorded. The audit trail provides complete traceability for mission review, regulatory reporting, and post-event analysis.
+              All Conjunction Assessments (CA), Probability of Collision (Pc) evaluations, maneuver recommendations, and telemetry updates are cryptographically logged to ensure traceability for mission oversight and regulatory compliance.
             </p>
             
             <button
               onClick={() => setSelectedEvent(auditEvents[0])}
-              className="bg-neutral-200/50 hover:bg-neutral-300/50 dark:bg-white/5 dark:hover:bg-white/15 border border-neutral-300/50 dark:border-white/10 text-neutral-800 dark:text-white backdrop-blur-md px-6 py-3 rounded-md text-xs font-mono uppercase tracking-widest flex items-center gap-3 w-fit transition-all duration-300 cursor-pointer shadow-lg"
+              className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-600 dark:text-rose-400 backdrop-blur-md px-6 py-3 rounded-md text-xs font-mono uppercase tracking-widest flex items-center gap-3 w-fit transition-all duration-300 cursor-pointer shadow-lg"
             >
-              Open Audit Log
-              <ShieldCheck className="w-4 h-4 text-neutral-500 dark:text-neutral-400" />
+              Open Operations Log
+              <ShieldCheck className="w-4 h-4 text-rose-600 dark:text-rose-400" />
             </button>
           </motion.div>
 
@@ -212,7 +211,7 @@ export default function LedgerSection({ blocks }: LedgerSectionProps) {
             <div className="mt-6 flex justify-end">
               <button
                 onClick={() => setSelectedEvent(null)}
-                className="bg-neutral-200 hover:bg-neutral-300 dark:bg-white/5 dark:hover:bg-white/15 border border-neutral-300 dark:border-white/10 text-neutral-800 dark:text-white backdrop-blur-md px-6 py-2 rounded-md text-xs font-bold transition-all cursor-pointer"
+                className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-600 dark:text-rose-400 backdrop-blur-md px-6 py-2 rounded-md text-xs font-bold transition-all cursor-pointer"
               >
                 Close Record
               </button>

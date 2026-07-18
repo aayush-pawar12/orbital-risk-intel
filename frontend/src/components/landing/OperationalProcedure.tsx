@@ -12,8 +12,8 @@ export default function OperationalProcedure({ onLaunchMissionControl }: Operati
   const steps = [
     {
       num: "01",
-      title: "Data Ingestion",
-      desc: "Import TLEs, CDMs, ephemerides, and sensor observations from integrated tracking providers.",
+      title: "Telemetry Ingestion",
+      desc: "Ingest TLEs, CDMs, and ephemeris data from the Space Surveillance Network and commercial providers.",
       chip: "INPUT",
       metric: "12ms latency",
       timestamp: "T-0:00:00",
@@ -21,8 +21,8 @@ export default function OperationalProcedure({ onLaunchMissionControl }: Operati
     },
     {
       num: "02",
-      title: "Risk Assessment",
-      desc: "Propagate orbital trajectories, detect close approaches, and calculate probability of collision using validated orbital mechanics models.",
+      title: "Orbit Propagation",
+      desc: "Propagate state vectors to calculate Time of Closest Approach (TCA), miss distance, and Probability of Collision (Pc).",
       chip: "PROCESSING",
       metric: "145ms compute",
       timestamp: "T+0:00:12",
@@ -30,8 +30,8 @@ export default function OperationalProcedure({ onLaunchMissionControl }: Operati
     },
     {
       num: "03",
-      title: "Mitigation Planning",
-      desc: "Generate fuel-efficient maneuver candidates, compare projected outcomes, and present the recommended avoidance strategy for operator approval.",
+      title: "Maneuver Planning",
+      desc: "Calculate fuel-efficient delta-V maneuver vectors to mitigate collision risk and recommend an avoidance strategy.",
       chip: "OUTPUT",
       metric: "98.7% confidence",
       timestamp: "T+0:01:45",
@@ -58,8 +58,8 @@ export default function OperationalProcedure({ onLaunchMissionControl }: Operati
             {/* Pipeline Status Indicator */}
             <div className="flex items-center gap-2 mb-8 ml-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-[10px] font-mono tracking-widest uppercase text-neutral-500 dark:text-neutral-400">
-                Pipeline Status: Online
+              <span className="text-[10px] font-mono tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+                Pipeline Status: Nominal
               </span>
             </div>
 
@@ -88,7 +88,7 @@ export default function OperationalProcedure({ onLaunchMissionControl }: Operati
                           {step.title}
                         </h3>
                       </div>
-                      <span className="px-2 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-neutral-300">
+                      <span className="px-2 py-0.5 rounded text-[8px] font-bold tracking-widest uppercase bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                         {step.chip}
                       </span>
                     </div>
@@ -122,22 +122,22 @@ export default function OperationalProcedure({ onLaunchMissionControl }: Operati
           >
             <div className="text-neutral-500 dark:text-neutral-400 text-xs font-mono tracking-widest uppercase mb-4 flex items-center gap-2">
               <Circle className="w-3 h-3 text-neutral-400" />
-              SYSTEM WORKFLOW
+              PROCESSING PIPELINE
             </div>
             <h2 className="text-3xl md:text-5xl font-extrabold text-neutral-900 dark:text-white mb-6 uppercase tracking-tight leading-tight">
-              Collision Assessment<br />Pipeline
+              Conjunction Assessment<br />Pipeline
             </h2>
             <p className="text-neutral-600 dark:text-neutral-400 text-sm md:text-base leading-relaxed mb-8">
-              ORIS continuously processes orbital state vectors, conjunction messages, and tracking observations to evaluate collision probability. When predefined risk thresholds are exceeded, the system generates maneuver recommendations and records every decision for operator review.
+              The system continuously evaluates state vectors, Conjunction Data Messages (CDMs), and raw sensor observations to quantify collision risk. Upon exceeding established Probability of Collision (Pc) thresholds, it computes avoidance maneuvers and logs operations.
             </p>
             
             <button
               onClick={onLaunchMissionControl}
               id="view-workflow-btn"
-              className="bg-neutral-200/50 hover:bg-neutral-300/50 dark:bg-white/5 dark:hover:bg-white/10 border border-neutral-300/50 dark:border-white/10 text-neutral-800 dark:text-neutral-200 backdrop-blur-md px-6 py-3 rounded-md text-xs font-mono uppercase tracking-widest flex items-center gap-3 w-fit transition-all duration-300 shadow-lg cursor-pointer"
+              className="bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 backdrop-blur-md px-6 py-3 rounded-md text-xs font-mono uppercase tracking-widest flex items-center gap-3 w-fit transition-all duration-300 shadow-lg cursor-pointer"
             >
-              <Play className="w-3 h-3" />
-              View Simulation
+              <Play className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+              View Operations
             </button>
           </motion.div>
 

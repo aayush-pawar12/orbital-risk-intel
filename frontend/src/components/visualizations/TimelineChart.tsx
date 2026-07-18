@@ -1,7 +1,7 @@
 'use client';
 
-import { PredictResponse } from '@/lib/api';
-import { TrendingDown, Clock } from 'lucide-react';
+import { PredictResponse, AssessResponse } from '@/lib/api';
+import { Activity, Clock } from 'lucide-react';
 import {
     ResponsiveContainer, AreaChart, Area, XAxis, YAxis,
     CartesianGrid, Tooltip, ReferenceLine,
@@ -9,173 +9,129 @@ import {
 
 interface Props {
     prediction: PredictResponse | null;
+    assessment?: AssessResponse | null;
     loading: boolean;
 }
 
-export default function TimelineChart({ prediction, loading }: Props) {
+const formatTime = (timeStr: string) => {
+    return new Date(timeStr).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+};
+
+const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: { value: number }[]; label?: string }) => {
+    if (active && payload && payload.length) {
+        const dist = payload[0].value;
+        const time = formatTime(label || '');
+        return (
+            <div className="bg-neutral-900 border border-neutral-700 rounded-lg p-3 shadow-xl">
+                <p className="text-xs text-neutral-500 mb-2 font-mono uppercase">
+                    {time} UTC
+                </p>
+                <div className="flex items-baseline gap-2">
+                    <span className={`text-lg font-mono ${dist < 1 ? 'text-rose-500' : (dist < 5 ? 'text-amber-500' : 'text-emerald-500')}`}>
+                        {dist.toFixed(2)}
+                    </span>
+                    <span className="text-xs text-neutral-500">km</span>
+                </div>
+            </div>
+        );
+    }
+    return null;
+};
+
+export default function TimelineChart({ prediction, assessment, loading }: Props) {
     if (loading) {
         return (
-            <div className="card">
-                <SectionHeader />
-                <div className="skeleton" style={{ height: '280px', marginTop: '1rem' }} />
+            <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px] flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <Activity size={24} className="text-neutral-600 animate-pulse" />
+                    <p className="text-neutral-500 text-sm m-0">Computing 24-hour prediction...</p>
+                </div>
             </div>
         );
     }
 
-    if (!prediction) {
+    if (!prediction && !assessment) {
         return (
-            <div className="card">
-                <SectionHeader />
-                <div style={{
-                    textAlign: 'center',
-                    padding: '2.5rem 2rem',
-                    color: 'var(--text-muted)',
-                }}>
-                    <TrendingDown size={32} style={{ margin: '0 auto 0.75rem', opacity: 0.4 }} />
-                    <p style={{ fontSize: '0.8rem', margin: '0 0 0.75rem', color: 'var(--text-secondary)' }}>
-                        Distance timeline not available
-                    </p>
-                    <p style={{ fontSize: '0.68rem', margin: 0, lineHeight: 1.5 }}>
-                        After running a <strong style={{ color: '#8b5cf6' }}>PREDICT TCA</strong>, this chart will display how
-                        the separation distance between the two objects changes over time — with
-                        <span style={{ color: 'var(--risk-critical)' }}> critical</span> and
-                        <span style={{ color: 'var(--risk-warning)' }}> warning</span> threshold lines marked.
+            <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px] flex flex-col">
+                <h3 className="text-sm font-semibold text-neutral-100 mb-6">Distance Timeline</h3>
+                <div className="flex-1 flex flex-col items-center justify-center text-center">
+                    <Activity size={24} className="mb-4 text-neutral-600" />
+                    <p className="text-sm text-neutral-500">
+                        Distance timeline not available.<br/>
+                        Click <strong>Predict TCA</strong> to generate a 24-hour forecast.
                     </p>
                 </div>
             </div>
         );
     }
 
-    const chartData = prediction.timeline.map((point, idx) => ({
-        time: new Date(point.time_utc).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }),
-        distance: point.distance_km,
-        risk: point.risk_level,
-        fullTime: point.time_utc,
-        index: idx,
-    }));
-
-    const minDist = prediction.min_distance_km;
+    const data = prediction?.timeline.map(p => ({
+        time: p.time_utc,
+        distance_km: p.distance_km
+    })) || (assessment ? [{
+        time: assessment.timestamp,
+        distance_km: assessment.risk.distance_km
+    }] : []);
 
     return (
-        <div className="card animate-fade-in">
-            <SectionHeader />
-
-            <div style={{
-                display: 'flex', gap: '1rem', marginTop: '0.75rem', marginBottom: '0.5rem',
-            }}>
-                <ChipInfo label="WINDOW" value={`${prediction.window_hours}h`} />
-                <ChipInfo label="STEP" value={`${prediction.step_minutes}min`} />
-                <ChipInfo label="POINTS" value={String(prediction.total_steps)} />
-                <ChipInfo label="MODEL" value={prediction.propagation_model} />
+        <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px] flex flex-col">
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                    <Clock size={16} className="text-neutral-500" />
+                    <h3 className="text-sm font-semibold text-neutral-100 m-0">
+                        {prediction ? '24H Predicted Distance' : 'Real-Time Distance'}
+                    </h3>
+                </div>
+                {prediction && (
+                    <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
+                        SGP4
+                    </span>
+                )}
             </div>
 
-            <div style={{ height: '260px', marginTop: '0.5rem' }}>
+            <div className="flex-1 w-full min-h-0">
                 <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                         <defs>
                             <linearGradient id="distGradient" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#00d4ff" stopOpacity={0.3} />
-                                <stop offset="95%" stopColor="#00d4ff" stopOpacity={0} />
+                                <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.2} />
+                                <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
                             </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1e2d4a" />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#262626" vertical={false} />
                         <XAxis
                             dataKey="time"
-                            tick={{ fill: '#5a6478', fontSize: 10, fontFamily: 'JetBrains Mono' }}
-                            axisLine={{ stroke: '#1e2d4a' }}
-                            tickLine={{ stroke: '#1e2d4a' }}
-                            interval={Math.floor(chartData.length / 6)}
+                            tickFormatter={formatTime}
+                            stroke="#404040"
+                            tick={{ fill: '#737373', fontSize: 11, fontFamily: 'monospace' }}
+                            minTickGap={30}
+                            axisLine={false}
+                            tickLine={false}
+                            dy={10}
                         />
                         <YAxis
-                            tick={{ fill: '#5a6478', fontSize: 10, fontFamily: 'JetBrains Mono' }}
-                            axisLine={{ stroke: '#1e2d4a' }}
-                            tickLine={{ stroke: '#1e2d4a' }}
-                            label={{
-                                value: 'Distance (km)',
-                                angle: -90,
-                                position: 'insideLeft',
-                                fill: '#5a6478',
-                                fontSize: 10,
-                            }}
+                            stroke="#404040"
+                            tick={{ fill: '#737373', fontSize: 11, fontFamily: 'monospace' }}
+                            tickFormatter={(v) => `${v.toFixed(0)}`}
+                            axisLine={false}
+                            tickLine={false}
+                            dx={-10}
                         />
-                        <Tooltip
-                            contentStyle={{
-                                background: '#0f1729',
-                                border: '1px solid #1e2d4a',
-                                borderRadius: '8px',
-                                fontFamily: 'JetBrains Mono',
-                                fontSize: '0.7rem',
-                            }}
-                            labelStyle={{ color: '#8b95a8' }}
-                            itemStyle={{ color: '#e8ecf4' }}
-                            formatter={((value: any) => [`${Number(value).toFixed(2)} km`, 'Distance']) as any}
-                        />
-                        <ReferenceLine
-                            y={1}
-                            stroke="#ff2d55"
-                            strokeDasharray="4 4"
-                            strokeWidth={1}
-                            label={{ value: 'CRITICAL 1km', fill: '#ff2d55', fontSize: 9, position: 'right' }}
-                        />
-                        <ReferenceLine
-                            y={5}
-                            stroke="#ff9500"
-                            strokeDasharray="4 4"
-                            strokeWidth={1}
-                            label={{ value: 'WARNING 5km', fill: '#ff9500', fontSize: 9, position: 'right' }}
-                        />
+                        <Tooltip content={<CustomTooltip />} />
+                        <ReferenceLine y={1} stroke="#ef4444" strokeDasharray="4 4" opacity={0.6} />
+                        <ReferenceLine y={5} stroke="#f59e0b" strokeDasharray="4 4" opacity={0.4} />
                         <Area
                             type="monotone"
-                            dataKey="distance"
-                            stroke="#00d4ff"
+                            dataKey="distance_km"
+                            stroke="#0ea5e9"
                             strokeWidth={2}
+                            fillOpacity={1}
                             fill="url(#distGradient)"
-                            dot={false}
-                            activeDot={{ r: 4, fill: '#00d4ff', stroke: '#0f1729', strokeWidth: 2 }}
+                            isAnimationActive={false}
                         />
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-        </div>
-    );
-}
-
-function SectionHeader() {
-    return (
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            paddingBottom: '0.5rem',
-            borderBottom: '1px solid var(--border-primary)',
-        }}>
-            <TrendingDown size={14} color="var(--accent-cyan)" />
-            <h2 style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.12em',
-                margin: 0,
-                color: 'var(--text-secondary)',
-            }}>
-                DISTANCE TIMELINE — PROPAGATION WINDOW
-            </h2>
-        </div>
-    );
-}
-
-function ChipInfo({ label, value }: { label: string; value: string }) {
-    return (
-        <div style={{
-            background: 'var(--bg-secondary)',
-            border: '1px solid var(--border-primary)',
-            borderRadius: '4px',
-            padding: '2px 8px',
-            display: 'flex',
-            gap: '6px',
-            alignItems: 'center',
-        }}>
-            <span className="label" style={{ fontSize: '0.5rem' }}>{label}</span>
-            <span className="mono" style={{ fontSize: '0.65rem', color: 'var(--accent-cyan)' }}>{value}</span>
         </div>
     );
 }

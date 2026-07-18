@@ -62,7 +62,8 @@ def assess_conjunction(req: AssessRequest, db: Session = Depends(get_db)):
     *** CORE USP: If distance < 1 km, AUTOMATICALLY triggers critical response ***
     """
     # Look up objects
-    satellite = db.query(Satellite).filter(Satellite.id == req.satellite_id).first()
+    satellite = db.query(Satellite).filter(
+        Satellite.id == req.satellite_id).first()
     if not satellite:
         raise HTTPException(
             status_code=404, detail=f"Satellite ID {req.satellite_id} not found"
@@ -172,7 +173,8 @@ def predict_conjunction(req: PredictRequest, db: Session = Depends(get_db)):
 
     *** CORE USP: If min distance < 1 km, AUTOMATICALLY triggers critical response ***
     """
-    satellite = db.query(Satellite).filter(Satellite.id == req.satellite_id).first()
+    satellite = db.query(Satellite).filter(
+        Satellite.id == req.satellite_id).first()
     if not satellite:
         raise HTTPException(
             status_code=404, detail=f"Satellite ID {req.satellite_id} not found"
@@ -216,7 +218,8 @@ def predict_conjunction(req: PredictRequest, db: Session = Depends(get_db)):
     # ═══════════════════════════════════════════════════════════════════
     auto_response = None
     if result.min_distance_km < settings.RISK_CRITICAL_THRESHOLD:
-        logger.critical(f"🚨 PREDICTED CRITICAL BREACH — TCA auto-response triggered")
+        logger.critical(
+            f"🚨 PREDICTED CRITICAL BREACH — TCA auto-response triggered")
         auto_response = execute_critical_response(
             db=db,
             satellite_name=satellite.name,
@@ -251,7 +254,8 @@ def system_status(db: Session = Depends(get_db)):
     incident_count = db.query(CriticalIncident).count()
     audit_count = db.query(AuditLog).count()
 
-    latest_tle = db.query(TLERecord).order_by(TLERecord.created_at.desc()).first()
+    latest_tle = db.query(TLERecord).order_by(
+        TLERecord.created_at.desc()).first()
 
     return SystemStatus(
         status="operational",

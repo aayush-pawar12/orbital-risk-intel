@@ -30,7 +30,8 @@ class Satellite(Base):
     tle_records = relationship(
         "TLERecord", back_populates="satellite", foreign_keys="TLERecord.satellite_id"
     )
-    assessments = relationship("ConjunctionAssessment", back_populates="satellite")
+    assessments = relationship(
+        "ConjunctionAssessment", back_populates="satellite")
 
     def __repr__(self):
         return f"<Satellite(name='{self.name}', norad_id={self.norad_id})>"
@@ -49,7 +50,8 @@ class Debris(Base):
     tle_records = relationship(
         "TLERecord", back_populates="debris", foreign_keys="TLERecord.debris_id"
     )
-    assessments = relationship("ConjunctionAssessment", back_populates="debris")
+    assessments = relationship(
+        "ConjunctionAssessment", back_populates="debris")
 
     def __repr__(self):
         return f"<Debris(name='{self.name}', norad_id={self.norad_id})>"
@@ -76,7 +78,8 @@ class TLERecord(Base):
     )
 
     __table_args__ = (
-        Index("ix_tle_records_object_created", "object_type", "norad_id", "created_at"),
+        Index("ix_tle_records_object_created",
+              "object_type", "norad_id", "created_at"),
     )
 
     def __repr__(self):
@@ -101,7 +104,8 @@ class ConjunctionAssessment(Base):
     satellite = relationship("Satellite", back_populates="assessments")
     debris = relationship("Debris", back_populates="assessments")
 
-    __table_args__ = (Index("ix_conjunction_sat_debris", "satellite_id", "debris_id"),)
+    __table_args__ = (Index("ix_conjunction_sat_debris",
+                      "satellite_id", "debris_id"),)
 
     def __repr__(self):
         return f"<ConjunctionAssessment(sat={self.satellite_id}, debris={self.debris_id}, risk={self.risk_level})>"
@@ -143,7 +147,8 @@ class AuditLog(Base):
     prev_hash = Column(String(64), nullable=False)
     tx_hash = Column(String(42), nullable=False)
     block_data = Column(Text, nullable=False)
-    verification_status = Column(String(20), nullable=False, default="VERIFIED")
+    verification_status = Column(
+        String(20), nullable=False, default="VERIFIED")
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     def __repr__(self):
