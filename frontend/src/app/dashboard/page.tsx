@@ -349,8 +349,8 @@ export default function Dashboard() {
 
 /* ── Helper Components ── */
 
-function SectionTitle({ number, title, subtitle }: {
-  number: string; title: string; subtitle: string;
+function SectionTitle({ number, title }: {
+  number: string; title: string;
 }) {
   return (
     <div style={{
@@ -377,13 +377,6 @@ function SectionTitle({ number, title, subtitle }: {
         }}>
           {title}
         </h2>
-        <p style={{
-          fontSize: '0.68rem',
-          color: 'var(--text-muted)',
-          margin: '2px 0 0',
-        }}>
-          {subtitle}
-        </p>
       </div>
     </div>
   );
