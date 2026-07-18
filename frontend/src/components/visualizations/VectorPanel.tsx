@@ -112,14 +112,14 @@ export default function VectorPanel({ assessment }: Props) {
 
 function VectorTable({ title, unit, data }: { title: string, unit: string, data: { label: string, value: number }[] }) {
     return (
-        <div className="bg-neutral-900 border border-white/10 rounded-lg overflow-hidden">
-            <div className="bg-neutral-800/50 px-3 py-1.5 border-b border-white/10">
+        <div className="bg-neutral-900 border border-white/5 rounded-lg overflow-hidden">
+            <div className="bg-neutral-800/50 px-3 py-1.5 border-b border-white/5">
                 <span className="text-[10px] font-semibold text-neutral-500 uppercase tracking-widest">{title} ({unit})</span>
             </div>
             <table className="w-full text-left border-collapse">
                 <tbody>
                     {data.map((row, i) => (
-                        <tr key={row.label} className={i !== data.length - 1 ? 'border-b border-white/10/50' : ''}>
+                        <tr key={row.label} className={i !== data.length - 1 ? 'border-b border-white/5' : ''}>
                             <td className="px-3 py-1.5 w-8 text-neutral-500 font-mono text-xs">{row.label}</td>
                             <td className="px-3 py-1.5 text-right font-mono text-xs text-neutral-300">{row.value >= 0 ? '+' : ''}{row.value.toFixed(4)}</td>
                         </tr>
