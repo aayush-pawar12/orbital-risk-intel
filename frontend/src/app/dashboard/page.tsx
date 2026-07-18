@@ -169,7 +169,6 @@ export default function Dashboard() {
           <SectionTitle
             number="01"
             title="OBJECT SELECTION"
-            subtitle="   "
           />
 
           <div style={{
@@ -274,7 +273,6 @@ export default function Dashboard() {
             <SectionTitle
               number="02"
               title="OBJECT DETAILS"
-              subtitle="Identification and orbital metadata for the selected satellite and debris"
             />
 
             <div className="dashboard-grid" style={{ marginBottom: '1.5rem' }}>
@@ -289,7 +287,6 @@ export default function Dashboard() {
           <SectionTitle
             number="03"
             title="SPATIAL ANALYSIS"
-            subtitle="3D orbital positions and state vectors in the GCRS coordinate frame"
           />
 
           <div className="dashboard-grid" style={{ marginBottom: '1.5rem' }}>
@@ -304,7 +301,6 @@ export default function Dashboard() {
             <SectionTitle
               number="04"
               title="CONJUNCTION PREDICTION"
-              subtitle="24-hour propagation timeline showing distance evolution and Time of Closest Approach (TCA)"
             />
 
             <div className="dashboard-grid" style={{ marginBottom: '1.5rem' }}>
@@ -319,7 +315,6 @@ export default function Dashboard() {
           <SectionTitle
             number="05"
             title="LIVE GLOBAL SATELLITE MAP"
-            subtitle="Real-time tracking of LEO, MEO, and GEO satellites — powered by satellitemap.space"
           />
 
           <SatelliteMapPanel noradId={selectedSat?.norad_id} />
