@@ -127,9 +127,20 @@ export default function Dashboard() {
         )}
 
         {/* ╔══════════════════════════════════════════════╗ */}
-        {/* ║  SECTION 1: GETTING STARTED                 ║ */}
+        {/* ║  SECTION 1: MISSION OVERVIEW                 ║ */}
         {/* ╚══════════════════════════════════════════════╝ */}
-
+        <div className="flex items-center justify-between mt-2 mb-8 pb-4 border-b border-white/10">
+          <div>
+            <h1 className="text-2xl font-light text-white tracking-wide">COMMAND CENTER</h1>
+            <p className="text-sm text-neutral-400 mt-1">Real-time conjunction analysis and threat monitoring</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="bg-neutral-900/50 border border-white/5 rounded-lg px-4 py-2 flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs text-neutral-400 uppercase tracking-widest font-mono">System Nominal</span>
+            </div>
+          </div>
+        </div>
 
         {/* ╔══════════════════════════════════════════════╗ */}
         {/* ║  SECTION 2: OBJECT SELECTION & CONTROLS      ║ */}
