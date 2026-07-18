@@ -13,8 +13,6 @@ export default function Header({ status, apiOnline }: Props) {
             <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2 font-bold text-neutral-200">
                     <span className="text-white">ORIS</span>
-                    <span className="text-neutral-700">|</span>
-                    <span className="text-neutral-400">MISSION CONTROL</span>
                 </div>
                 
                 <div className="h-4 w-px bg-neutral-800" />
