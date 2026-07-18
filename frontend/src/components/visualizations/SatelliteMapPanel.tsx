@@ -17,12 +17,11 @@ export default function SatelliteMapPanel({ noradId }: Props) {
             </div>
 
             {/* Embedded Live Interactive Map */}
-            <div className="rounded-xl overflow-hidden border border-white/10 h-[450px] relative bg-neutral-900">
+            <div className="rounded-xl overflow-hidden border border-white/10 h-[500px] relative bg-black flex items-center justify-center">
                 <iframe
-                    src={`https://www.n2yo.com/widgets/widget-tracker.php?s=${noradId || 25544}&size=large&num=3&colors=000000,10b981,10b981,f43f5e,fff`}
+                    src={`https://www.n2yo.com/widgets/widget-tracker.php?s=${noradId || 25544}&size=wide&num=3&colors=000000,10b981,10b981,f43f5e,fff`}
                     title="Satellite Live Tracker"
-                    width="100%"
-                    height="100%"
+                    style={{ width: '100%', height: '100%', maxWidth: '850px' }}
                     className="border-none block"
                     loading="lazy"
                     allow="accelerometer; gyroscope"
