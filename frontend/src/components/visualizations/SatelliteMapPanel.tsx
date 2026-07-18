@@ -16,10 +16,10 @@ export default function SatelliteMapPanel({ noradId }: Props) {
                 </h3>
             </div>
 
-            {/* Embedded N2YO widget */}
-            <div className="rounded-xl overflow-hidden border border-white/10 h-[450px] relative bg-neutral-900">
+            {/* Embedded Live Interactive Map */}
+            <div className="rounded-xl overflow-hidden border border-white/10 h-[600px] relative bg-neutral-900">
                 <iframe
-                    src={`https://www.n2yo.com/widgets/widget-tracker.php?s=${noradId || 25544}&size=large&num=3&colors=000000,10b981,10b981,f43f5e,fff`}
+                    src={`https://satellitemap.space/?norad=${noradId || 25544}`}
                     title="Satellite Live Tracker"
                     width="100%"
                     height="100%"
