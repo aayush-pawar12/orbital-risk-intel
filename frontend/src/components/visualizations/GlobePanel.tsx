@@ -17,7 +17,7 @@ const SCALE = 1 / 6371; // Normalize to unit sphere
 
 function Earth() {
     const meshRef = useRef<THREE.Mesh>(null);
-    const colorMap = useTexture('https://unpkg.com/three-globe/example/img/earth-dark.jpg');
+    const colorMap = useTexture('/earth-dark.jpg');
 
     useFrame((_, delta) => {
         if (meshRef.current) {
