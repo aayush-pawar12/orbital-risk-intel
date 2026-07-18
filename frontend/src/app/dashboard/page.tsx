@@ -131,23 +131,31 @@ export default function Dashboard() {
         {/* ╚══════════════════════════════════════════════╝ */}
         <div className="mt-4 mb-8 pb-4 border-b border-white/10">
           <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-3 text-[11px] uppercase tracking-wider font-mono text-neutral-400 bg-neutral-900/40 p-3 rounded-lg border border-white/5">
+            
             <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-neutral-500">Objects</span>
-              <span className="text-neutral-200">{status ? `${status.satellite_count} SAT · ${status.debris_count} DEB` : '—'}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-neutral-500">Objects</span>
+                <span className="text-neutral-200">{status ? `${status.satellite_count} SAT · ${status.debris_count} DEB` : '—'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-neutral-500">TLE Database</span>
+                <span className="text-neutral-200">{status ? `${status.tle_record_count} Records` : '—'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-neutral-500">Propagation</span>
+                <span className="text-neutral-200">SGP4 / Skyfield</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-neutral-500">Frame</span>
+                <span className="text-neutral-200">GCRS (ECI)</span>
+              </div>
             </div>
+
             <div className="flex items-center gap-2">
-              <span className="text-neutral-500">TLE Database</span>
-              <span className="text-neutral-200">{status ? `${status.tle_record_count} Records` : '—'}</span>
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-emerald-500 font-bold">SYSTEM NOMINAL</span>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-neutral-500">Propagation</span>
-              <span className="text-neutral-200">SGP4 / Skyfield</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-neutral-500">Frame</span>
-              <span className="text-neutral-200">GCRS (ECI)</span>
-            </div>
+
           </div>
         </div>
 
