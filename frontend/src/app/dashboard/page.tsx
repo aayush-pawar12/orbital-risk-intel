@@ -52,8 +52,6 @@ export default function Dashboard() {
         setDebris(debs);
         setStatus(sys);
         setApiOnline(true);
-        if (sats.length > 0) setSelectedSatId(sats[0].id);
-        if (debs.length > 0) setSelectedDebId(debs[0].id);
       } catch {
         setError('Cannot connect to backend API. The server may be waking up — please wait 30 seconds and refresh.');
         setApiOnline(false);
