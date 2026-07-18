@@ -11,7 +11,6 @@ import GlobePanel from '@/components/visualizations/GlobePanel';
 import TimelineChart from '@/components/visualizations/TimelineChart';
 import ClosestApproachPanel from '@/components/panels/ClosestApproachPanel';
 import VectorPanel from '@/components/visualizations/VectorPanel';
-import SatelliteMapPanel from '@/components/visualizations/SatelliteMapPanel';
 import EmergencyResponsePanel from '@/components/panels/EmergencyResponsePanel';
 import AuditTrailModal from '@/components/modals/AuditTrailModal';
 import { Shield } from 'lucide-react';
@@ -312,17 +311,6 @@ export default function Dashboard() {
               <ClosestApproachPanel prediction={prediction} loading={predicting} />
             </div>
           </div>
-
-          {/* ╔══════════════════════════════════════════════╗ */}
-          {/* ║  SECTION 6: LIVE SATELLITE MAP              ║ */}
-          {/* ╚══════════════════════════════════════════════╝ */}
-          <SectionTitle
-            number=" "
-            title="LIVE GLOBAL SATELLITE MAP"
-            subtitle='  '
-          />
-
-          <SatelliteMapPanel noradId={selectedSat?.norad_id} />
 
           {/* Footer */}
           <footer style={{
