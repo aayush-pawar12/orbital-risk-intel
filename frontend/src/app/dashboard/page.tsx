@@ -107,7 +107,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-neutral-800 selection:text-white">
       <Starfield />
       <div className="relative z-10">
-      <Header apiOnline={apiOnline} />
+      <Header status={status} apiOnline={apiOnline} />
       
 
       <main className="px-6 pb-8 max-w-[1600px] mx-auto">
@@ -159,18 +159,6 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               <span className="text-neutral-500">Frame</span>
               <span className="text-neutral-200">GCRS (ECI)</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-neutral-500">Updated</span>
-              <span className="text-neutral-200">
-                {status?.last_tle_update
-                  ? new Date(status.last_tle_update).toLocaleString('en-US', {
-                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
-                    hour12: false, timeZoneName: 'short',
-                  })
-                  : '—'
-                }
-              </span>
             </div>
           </div>
         </div>
