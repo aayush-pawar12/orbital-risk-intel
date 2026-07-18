@@ -2,7 +2,7 @@
 
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sphere, Line } from '@react-three/drei';
+import { OrbitControls, Sphere, Line, Stars } from '@react-three/drei';
 import { AssessResponse } from '@/lib/api';
 import { Globe2 } from 'lucide-react';
 import * as THREE from 'three';
@@ -42,6 +42,61 @@ function Earth() {
                 />
             </Sphere>
         </group>
+    );
+}
+
+function BackgroundDebris() {
+    const [positions, colors] = useMemo(() => {
+        const pts = [];
+        const cols = [];
+        const colorPalette = [
+            new THREE.Color('#10b981'), // emerald
+            new THREE.Color('#3b82f6'), // blue
+            new THREE.Color('#f59e0b'), // amber
+            new THREE.Color('#ec4899'), // pink
+            new THREE.Color('#a855f7')  // purple
+        ];
+        for (let i = 0; i < 4000; i++) {
+            const r = 1.05 + Math.random() * 1.5;
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            const x = r * Math.sin(phi) * Math.cos(theta);
+            const y = r * Math.sin(phi) * Math.sin(theta);
+            const z = r * Math.cos(phi);
+            pts.push(x, y, z);
+            
+            const c = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            cols.push(c.r, c.g, c.b);
+        }
+        return [new Float32Array(pts), new Float32Array(cols)];
+    }, []);
+
+    const meshRef = useRef<THREE.Points>(null);
+    useFrame((_, delta) => {
+        if (meshRef.current) {
+            meshRef.current.rotation.y += delta * 0.015; 
+            meshRef.current.rotation.x += delta * 0.005;
+        }
+    });
+
+    return (
+        <points ref={meshRef}>
+            <bufferGeometry>
+                <bufferAttribute
+                    attach="attributes-position"
+                    count={positions.length / 3}
+                    array={positions}
+                    itemSize={3}
+                />
+                <bufferAttribute
+                    attach="attributes-color"
+                    count={colors.length / 3}
+                    array={colors}
+                    itemSize={3}
+                />
+            </bufferGeometry>
+            <pointsMaterial size={0.012} vertexColors transparent opacity={0.65} />
+        </points>
     );
 }
 
@@ -108,6 +163,9 @@ function Scene({ assessment }: { assessment: AssessResponse | null }) {
             <ambientLight intensity={0.3} />
             <directionalLight position={[5, 3, 5]} intensity={0.8} color="#a3a3a3" />
             <pointLight position={[-5, -3, -5]} intensity={0.3} color="#a3a3a3" />
+
+            <Stars radius={10} depth={50} count={4000} factor={4} saturation={0} fade speed={1} />
+            <BackgroundDebris />
 
             <Earth />
             <SatelliteMarker position={satPos} color="#3b82f6" />
