@@ -173,7 +173,6 @@ function Scene({ assessment }: { assessment: AssessResponse | null }) {
             <directionalLight position={[5, 3, 5]} intensity={0.8} color="#a3a3a3" />
             <pointLight position={[-5, -3, -5]} intensity={0.3} color="#a3a3a3" />
 
-            <Stars radius={10} depth={50} count={4000} factor={4} saturation={0} fade speed={1} />
             <BackgroundDebris />
 
             <Earth />
