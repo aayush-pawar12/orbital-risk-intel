@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/purity */
 'use client';
 
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sphere, Line, Stars } from '@react-three/drei';
+import { Suspense } from 'react';
+import { OrbitControls, Sphere, Line, Stars, useTexture } from '@react-three/drei';
 import { AssessResponse } from '@/lib/api';
 import { Globe2 } from 'lucide-react';
 import * as THREE from 'three';
@@ -15,30 +17,41 @@ const SCALE = 1 / 6371; // Normalize to unit sphere
 
 function Earth() {
     const meshRef = useRef<THREE.Mesh>(null);
+    const colorMap = useTexture('https://unpkg.com/three-globe/example/img/earth-dark.jpg');
 
     useFrame((_, delta) => {
         if (meshRef.current) {
-            meshRef.current.rotation.y += delta * 0.05;
+            meshRef.current.rotation.y += delta * 0.015;
+            meshRef.current.rotation.x += delta * 0.005;
         }
     });
 
     return (
         <group>
-            {/* Earth sphere */}
+            {/* Earth sphere with texture */}
             <Sphere ref={meshRef} args={[1, 64, 64]}>
                 <meshStandardMaterial
-                    color="#171717"
-                    roughness={0.8}
-                    metalness={0.1}
+                    map={colorMap}
+                    roughness={0.6}
+                    metalness={0.2}
                 />
             </Sphere>
-            {/* Wireframe overlay */}
-            <Sphere args={[1.002, 32, 32]}>
+            {/* Atmospheric glow */}
+            <Sphere args={[1.02, 32, 32]}>
                 <meshBasicMaterial
-                    color="#404040"
-                    wireframe
+                    color="#3b82f6"
                     transparent
-                    opacity={0.3}
+                    opacity={0.1}
+                    blending={THREE.AdditiveBlending}
+                    side={THREE.BackSide}
+                />
+            </Sphere>
+            <Sphere args={[1.01, 32, 32]}>
+                <meshBasicMaterial
+                    color="#1e3a8a"
+                    transparent
+                    opacity={0.15}
+                    blending={THREE.AdditiveBlending}
                 />
             </Sphere>
         </group>
@@ -199,7 +212,9 @@ export default function GlobePanel({ assessment }: Props) {
                     camera={{ position: [0, 0, 3.5], fov: 45 }}
                     style={{ background: 'transparent' }}
                 >
-                    <Scene assessment={assessment} />
+                    <Suspense fallback={null}>
+                        <Scene assessment={assessment} />
+                    </Suspense>
                 </Canvas>
             </div>
 
