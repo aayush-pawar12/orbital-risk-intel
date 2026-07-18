@@ -107,7 +107,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-neutral-950 text-white font-sans selection:bg-neutral-800 selection:text-white">
       <Starfield />
       <div className="relative z-10">
-      <Header apiOnline={apiOnline} />
+      <Header status={status} apiOnline={apiOnline} />
       
 
       <main className="px-6 pb-8 max-w-[1600px] mx-auto">
