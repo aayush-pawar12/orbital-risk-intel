@@ -17,9 +17,9 @@ export default function SatelliteMapPanel({ noradId }: Props) {
             </div>
 
             {/* Embedded Live Interactive Map */}
-            <div className="rounded-xl overflow-hidden border border-white/10 h-[600px] relative bg-neutral-900">
+            <div className="rounded-xl overflow-hidden border border-white/10 h-[450px] relative bg-neutral-900">
                 <iframe
-                    src={`https://celestrak.org/cesium/orbit-viz3d.php?CATNR=${noradId || 25544}`}
+                    src={`https://www.n2yo.com/widgets/widget-tracker.php?s=${noradId || 25544}&size=large&num=3&colors=000000,10b981,10b981,f43f5e,fff`}
                     title="Satellite Live Tracker"
                     width="100%"
                     height="100%"
