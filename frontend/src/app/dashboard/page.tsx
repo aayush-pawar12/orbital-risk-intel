@@ -167,8 +167,9 @@ export default function Dashboard() {
           {/* ║  SECTION 2: OBJECT SELECTION & CONTROLS      ║ */}
           {/* ╚══════════════════════════════════════════════╝ */}
           <SectionTitle
-            number="01"
+            number=" "
             title="OBJECT SELECTION"
+            subtitle='  '
           />
 
           <div style={{
@@ -271,8 +272,9 @@ export default function Dashboard() {
           {/* ╚══════════════════════════════════════════════╝ */}
           <div id="section-assessment">
             <SectionTitle
-              number="02"
+              number="  "
               title="OBJECT DETAILS"
+              subtitle='  '
             />
 
             <div className="dashboard-grid" style={{ marginBottom: '1.5rem' }}>
@@ -285,8 +287,9 @@ export default function Dashboard() {
           {/* ║  SECTION 4: SPATIAL ANALYSIS                ║ */}
           {/* ╚══════════════════════════════════════════════╝ */}
           <SectionTitle
-            number="03"
+            number="  "
             title="SPATIAL ANALYSIS"
+            subtitle='  '
           />
 
           <div className="dashboard-grid" style={{ marginBottom: '1.5rem' }}>
@@ -299,8 +302,9 @@ export default function Dashboard() {
           {/* ╚══════════════════════════════════════════════╝ */}
           <div id="section-prediction">
             <SectionTitle
-              number="04"
+              number="  "
               title="CONJUNCTION PREDICTION"
+              subtitle='  '
             />
 
             <div className="dashboard-grid" style={{ marginBottom: '1.5rem' }}>
@@ -313,8 +317,9 @@ export default function Dashboard() {
           {/* ║  SECTION 6: LIVE SATELLITE MAP              ║ */}
           {/* ╚══════════════════════════════════════════════╝ */}
           <SectionTitle
-            number="05"
+            number=" "
             title="LIVE GLOBAL SATELLITE MAP"
+            subtitle='  '
           />
 
           <SatelliteMapPanel noradId={selectedSat?.norad_id} />
@@ -329,12 +334,9 @@ export default function Dashboard() {
             fontSize: '0.65rem',
           }}>
             <p style={{ margin: 0 }}>
-              ORIS v1.0 — Orbital Risk Intelligence System · SGP4 Propagation via Skyfield ·
-              TLE Source: Celestrak · Coordinate Frame: GCRS (ECI)
+              ORIS v1.0
             </p>
-            <p style={{ margin: '4px 0 0', fontSize: '0.6rem' }}>
-              Risk Thresholds: CRITICAL &lt; 1 km · WARNING 1–5 km · SAFE &gt; 5 km
-            </p>
+
           </footer>
 
           <AuditTrailModal
@@ -349,8 +351,8 @@ export default function Dashboard() {
 
 /* ── Helper Components ── */
 
-function SectionTitle({ number, title }: {
-  number: string; title: string;
+function SectionTitle({ number, title, subtitle }: {
+  number: string; title: string; subtitle: string;
 }) {
   return (
     <div style={{
@@ -377,6 +379,13 @@ function SectionTitle({ number, title }: {
         }}>
           {title}
         </h2>
+        <p style={{
+          fontSize: '0.68rem',
+          color: 'var(--text-muted)',
+          margin: '2px 0 0',
+        }}>
+          {subtitle}
+        </p>
       </div>
     </div>
   );
