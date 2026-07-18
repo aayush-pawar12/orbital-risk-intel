@@ -5,10 +5,10 @@ import { motion } from "motion/react";
 export default function ProposedStrategy() {
   const assessmentServices = [
     {
-      badge: "Conjunction Analysis",
-      title: "Close Approach Detection",
-      description: "Propagates orbital trajectories, identifies upcoming conjunction events, and continuously recalculates collision probability as new tracking data becomes available.",
-      metadataLabel: "Analysis Window",
+      badge: "Conjunction Assessment",
+      title: "Collision Risk Analysis",
+      description: "Propagates state vectors using SGP4/SDP4 models to determine Time of Closest Approach (TCA) and calculate Probability of Collision (Pc).",
+      metadataLabel: "Propagation Window",
       metadataValue: "72 Hours",
       status: "Operational",
       indicatorClass: "bg-emerald-500/80",
@@ -16,25 +16,25 @@ export default function ProposedStrategy() {
       icon: <Activity className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />
     },
     {
-      badge: "Maneuver Optimization",
-      title: "Avoidance Planning",
-      description: "Evaluates multiple ΔV solutions, estimates fuel consumption, and ranks maneuver options based on mission constraints and collision risk reduction.",
+      badge: "Maneuver Planning",
+      title: "Delta-V Optimization",
+      description: "Computes optimal delta-V requirements to minimize collision probability while respecting spacecraft operational constraints and fuel budgets.",
       metadataLabel: "Recommended ΔV",
       metadataValue: "0.42 m/s",
       status: "Solution Ready",
-      indicatorClass: "bg-blue-500/80",
-      statusClass: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20",
+      indicatorClass: "bg-rose-500/80",
+      statusClass: "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
       icon: <Compass className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />
     },
     {
-      badge: "Observation Management",
-      title: "Tracking Data Synchronization",
-      description: "Continuously ingests TLEs, CDMs, radar observations, optical tracking data, and ephemerides from connected tracking providers.",
+      badge: "Telemetry Processing",
+      title: "Data Ingestion",
+      description: "Ingests Two-Line Elements (TLEs), Conjunction Data Messages (CDMs), and high-fidelity ephemerides from the Space Surveillance Network (SSN).",
       metadataLabel: "Synchronization Interval",
       metadataValue: "Every 6 Hours",
       status: "Synchronized",
-      indicatorClass: "bg-indigo-500/80",
-      statusClass: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20",
+      indicatorClass: "bg-emerald-500/80",
+      statusClass: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
       icon: <Database className="w-5 h-5 text-neutral-500 dark:text-neutral-400" />
     }
   ];
@@ -58,13 +58,13 @@ export default function ProposedStrategy() {
         >
           <div className="text-neutral-500 dark:text-neutral-400 text-xs font-mono tracking-widest uppercase mb-4 flex items-center justify-center gap-2">
             <Grid className="w-4 h-4 text-neutral-400" />
-            ANALYTICS MODULES
+            CORE SUBSYSTEMS
           </div>
           <h2 className="text-3xl md:text-5xl font-extrabold text-neutral-900 dark:text-white mb-6 uppercase tracking-tight">
-            Core Assessment Services
+            Conjunction Assessment Services
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
-            ORIS combines orbital propagation, conjunction analysis, maneuver optimization, and observation management into a unified decision-support platform for satellite operators.
+            The platform integrates orbit propagation, precise ephemeris generation, maneuver optimization, and telemetry ingestion to support operators in executing collision avoidance.
           </p>
         </motion.div>
 
@@ -88,7 +88,7 @@ export default function ProposedStrategy() {
               <div>
                 <div className="flex items-center gap-3 mb-6">
                   {service.icon}
-                  <span className="text-[9px] font-bold tracking-widest uppercase text-neutral-600 dark:text-neutral-300 bg-neutral-200/50 dark:bg-white/5 px-2 py-1 rounded border border-neutral-300/50 dark:border-white/5">
+                  <span className={`text-[9px] font-bold tracking-widest uppercase px-2 py-1 rounded border ${service.statusClass}`}>
                     {service.badge}
                   </span>
                 </div>

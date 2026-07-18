@@ -35,7 +35,7 @@ export interface AuditLogEntry {
   prev_hash: string;
   tx_hash: string;
   verification_status: string;
-  block_data: any;
+  block_data: Record<string, unknown>;
   created_at: string;
 }
 
@@ -77,12 +77,6 @@ export const api = {
     apiFetch<PredictResponse>('/predict', {
       method: 'POST',
       body: JSON.stringify({ satellite_id, debris_id, window_hours, step_minutes }),
-    }),
-
-  simulateDrill: (satellite_id: number, debris_id: number) =>
-    apiFetch<AssessResponse>('/simulate-drill', {
-      method: 'POST',
-      body: JSON.stringify({ satellite_id, debris_id }),
     }),
 };
 

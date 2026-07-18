@@ -1,7 +1,7 @@
 'use client';
 
 import { AssessResponse } from '@/lib/api';
-import { AlertTriangle, ShieldCheck, ShieldAlert, Activity } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, Activity } from 'lucide-react';
 
 interface Props {
     assessment: AssessResponse | null;
@@ -11,11 +11,11 @@ interface Props {
 export default function RiskPanel({ assessment, loading }: Props) {
     if (loading) {
         return (
-            <div className="card">
-                <SectionHeader title="REAL-TIME RISK ASSESSMENT" />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-                    <div className="skeleton" style={{ height: '80px' }} />
-                    <div className="skeleton" style={{ height: '60px' }} />
+            <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                <h3 className="text-sm font-semibold text-neutral-100 mb-6">Real-Time Risk Assessment</h3>
+                <div className="flex flex-col gap-4">
+                    <div className="bg-neutral-800/50 animate-pulse rounded-lg h-[80px] border border-neutral-700/50" />
+                    <div className="bg-neutral-800/50 animate-pulse rounded-lg h-[60px] border border-neutral-700/50" />
                 </div>
             </div>
         );
@@ -23,139 +23,75 @@ export default function RiskPanel({ assessment, loading }: Props) {
 
     if (!assessment) {
         return (
-            <div className="card">
-                <SectionHeader title="REAL-TIME RISK ASSESSMENT" />
-                <div style={{
-                    marginTop: '1.5rem',
-                    textAlign: 'center',
-                    padding: '1.5rem',
-                    color: 'var(--text-muted)',
-                }}>
-                    <Activity size={32} style={{ margin: '0 auto 0.75rem', opacity: 0.4 }} />
-                    <p style={{ fontSize: '0.8rem', margin: '0 0 0.75rem', color: 'var(--text-secondary)' }}>
-                        No assessment running
+            <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-full flex flex-col">
+                <h3 className="text-sm font-semibold text-neutral-100 mb-6">Real-Time Risk Assessment</h3>
+                <div className="flex-1 flex flex-col items-center justify-center text-neutral-500 py-10">
+                    <Activity size={24} className="mb-4 text-neutral-600" />
+                    <p className="text-sm text-center">
+                        No assessment running.<br />
+                        Select two objects and click <strong>Run Assessment</strong>.
                     </p>
-                    <p style={{ fontSize: '0.68rem', margin: 0, lineHeight: 1.5 }}>
-                        Click <strong style={{ color: 'var(--accent-cyan)' }}>RUN ASSESSMENT</strong> to compute the real-time
-                        Euclidean separation distance between the selected satellite and debris using SGP4 orbital propagation.
-                    </p>
-                    <div style={{
-                        marginTop: '0.75rem',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        gap: '0.75rem',
-                        fontSize: '0.6rem',
-                    }}>
-                        <span style={{ color: 'var(--risk-critical)' }}>● CRITICAL &lt; 1 km</span>
-                        <span style={{ color: 'var(--risk-warning)' }}>● WARNING 1–5 km</span>
-                        <span style={{ color: 'var(--risk-safe)' }}>● SAFE &gt; 5 km</span>
-                    </div>
                 </div>
             </div>
         );
     }
 
     const { risk } = assessment;
-    const riskColor = risk.risk_level === 'CRITICAL' ? 'var(--risk-critical)'
-        : risk.risk_level === 'WARNING' ? 'var(--risk-warning)' : 'var(--risk-safe)';
-    const riskBg = risk.risk_level === 'CRITICAL' ? 'var(--risk-critical-bg)'
-        : risk.risk_level === 'WARNING' ? 'var(--risk-warning-bg)' : 'var(--risk-safe-bg)';
+    
+    // Map risk levels
+    const isCritical = risk.risk_level === 'CRITICAL';
+    const isWarning = risk.risk_level === 'WARNING';
+    
+    const riskBorder = isCritical ? 'border-rose-900' : (isWarning ? 'border-amber-900/50' : 'border-emerald-900/50');
+    const riskBg = isCritical ? 'bg-rose-950/30' : (isWarning ? 'bg-amber-950/20' : 'bg-emerald-950/20');
+    const riskText = isCritical ? 'text-rose-500' : (isWarning ? 'text-amber-500' : 'text-emerald-500');
     const RiskIcon = risk.risk_level === 'SAFE' ? ShieldCheck : ShieldAlert;
 
     return (
-        <div className="card animate-fade-in" style={{
-            borderColor: risk.risk_level === 'CRITICAL' ? 'rgba(255, 45, 85, 0.4)' : undefined,
-        }}>
-            <SectionHeader title="REAL-TIME RISK ASSESSMENT" />
+        <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-full flex flex-col">
+            <h3 className="text-sm font-semibold text-neutral-100 mb-6">Real-Time Risk Assessment</h3>
 
             {/* Big risk display */}
-            <div style={{
-                marginTop: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '1.5rem',
-            }}>
-                <div style={{
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '16px',
-                    background: riskBg,
-                    border: `2px solid ${riskColor}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                }} className={risk.risk_level === 'CRITICAL' ? 'pulse-critical' : ''}>
-                    <RiskIcon size={36} color={riskColor} />
+            <div className={`mt-2 mb-6 p-6 rounded-xl border ${riskBg} ${riskBorder} flex items-center gap-6`}>
+                <div className="shrink-0">
+                    <RiskIcon size={40} className={riskText} />
                 </div>
 
-                <div style={{ flex: 1 }}>
-                    <div className={`risk-badge risk-${risk.risk_level.toLowerCase()}`} style={{ marginBottom: '0.5rem' }}>
-                        <span style={{
-                            width: 6, height: 6, borderRadius: '50%',
-                            background: riskColor, display: 'inline-block',
-                        }} />
-                        {risk.risk_level}
+                <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className={`w-2 h-2 rounded-full ${isCritical ? 'bg-rose-500' : (isWarning ? 'bg-amber-500' : 'bg-emerald-500')} ${isCritical ? 'animate-pulse' : ''}`} />
+                        <span className={`text-xs font-semibold tracking-widest uppercase ${riskText}`}>
+                            {risk.risk_level}
+                        </span>
                     </div>
-                    <div className="value-large" style={{ color: riskColor }}>
-                        {risk.distance_km.toFixed(2)}
-                        <span style={{ fontSize: '0.8rem', fontWeight: 400, marginLeft: '4px', color: 'var(--text-muted)' }}>km</span>
+                    <div className="flex items-baseline gap-2">
+                        <div className={`text-5xl font-mono tracking-tighter ${riskText}`}>
+                            {risk.distance_km.toFixed(2)}
+                        </div>
+                        <span className="text-sm font-medium text-neutral-400">km</span>
                     </div>
-                    <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', margin: '4px 0 0' }}>
-                        SEPARATION DISTANCE · EUCLIDEAN · GCRS
+                    <p className="text-xs text-neutral-500 mt-2 font-medium">
+                        Euclidean Separation Distance
                     </p>
                 </div>
             </div>
 
-            {/* Metadata */}
-            <div style={{
-                marginTop: '1rem',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '0.5rem',
-            }}>
-                <MetaItem label="TIMESTAMP" value={new Date(assessment.timestamp).toISOString().slice(11, 23) + 'Z'} />
-                <MetaItem label="THRESHOLD" value={`${risk.threshold_used} km`} />
-                <MetaItem label="MODEL" value={assessment.propagation_model} />
-                <MetaItem label="FRAME" value={assessment.coordinate_frame} />
+            {/* Metadata Table */}
+            <div className="mt-auto grid grid-cols-2 gap-px bg-neutral-800 rounded-lg overflow-hidden border border-white/10">
+                <MetaItem label="Timestamp" value={new Date(assessment.timestamp).toISOString().slice(11, 23) + 'Z'} />
+                <MetaItem label="Threshold" value={`${risk.threshold_used} km`} />
+                <MetaItem label="Model" value={assessment.propagation_model} />
+                <MetaItem label="Frame" value={assessment.coordinate_frame} />
             </div>
-        </div>
-    );
-}
-
-function SectionHeader({ title }: { title: string }) {
-    return (
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            paddingBottom: '0.5rem',
-            borderBottom: '1px solid var(--border-primary)',
-        }}>
-            <AlertTriangle size={14} color="var(--accent-cyan)" />
-            <h2 style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.12em',
-                margin: 0,
-                color: 'var(--text-secondary)',
-            }}>
-                {title}
-            </h2>
         </div>
     );
 }
 
 function MetaItem({ label, value }: { label: string; value: string }) {
     return (
-        <div style={{
-            background: 'var(--bg-secondary)',
-            borderRadius: '6px',
-            padding: '0.4rem 0.6rem',
-            border: '1px solid var(--border-primary)',
-        }}>
-            <p className="label" style={{ margin: 0, fontSize: '0.55rem' }}>{label}</p>
-            <p className="mono" style={{ margin: 0, fontSize: '0.72rem', color: 'var(--text-primary)' }}>{value}</p>
+        <div className="bg-neutral-950/40 backdrop-blur-xl p-3 flex flex-col justify-center">
+            <span className="text-[11px] text-neutral-500 uppercase tracking-wider font-semibold mb-1">{label}</span>
+            <span className="text-xs font-mono text-neutral-300">{value}</span>
         </div>
     );
 }

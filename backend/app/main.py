@@ -52,7 +52,8 @@ async def lifespan(app: FastAPI):
             await refresh_all_tles(db)
             logger.info("TLE fetch check complete")
         except Exception as e:
-            logger.warning(f"Live TLE refresh warning (using fallback TLEs): {e}")
+            logger.warning(
+                f"Live TLE refresh warning (using fallback TLEs): {e}")
     finally:
         db.close()
 

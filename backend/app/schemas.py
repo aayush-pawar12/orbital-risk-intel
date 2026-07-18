@@ -73,7 +73,8 @@ class AssessResponse(BaseModel):
     satellite_velocity: VelocityVector
     debris_velocity: VelocityVector
     risk: RiskClassification
-    auto_response: Optional[dict] = None  # Populated when CRITICAL threshold breached
+    # Populated when CRITICAL threshold breached
+    auto_response: Optional[dict] = None
 
 
 # ── Prediction ─────────────────────────────────────────────────────────
@@ -104,7 +105,8 @@ class PredictResponse(BaseModel):
     predicted_risk: str
     confidence_level: str
     timeline: list[TimelinePoint]
-    auto_response: Optional[dict] = None  # Populated when CRITICAL threshold breached
+    # Populated when CRITICAL threshold breached
+    auto_response: Optional[dict] = None
 
 
 # ── System Status ──────────────────────────────────────────────────────

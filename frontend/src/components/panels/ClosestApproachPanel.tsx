@@ -1,7 +1,7 @@
 'use client';
 
 import { PredictResponse } from '@/lib/api';
-import { Target, Clock, TrendingDown, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { Target, ShieldCheck, ShieldAlert } from 'lucide-react';
 
 interface Props {
     prediction: PredictResponse | null;
@@ -11,11 +11,11 @@ interface Props {
 export default function ClosestApproachPanel({ prediction, loading }: Props) {
     if (loading) {
         return (
-            <div className="card">
-                <SectionHeader />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
-                    <div className="skeleton" style={{ height: '60px' }} />
-                    <div className="skeleton" style={{ height: '100px' }} />
+            <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px]">
+                <h3 className="text-sm font-semibold text-neutral-100 mb-6">Prediction Summary</h3>
+                <div className="flex flex-col gap-4">
+                    <div className="bg-neutral-800/50 animate-pulse rounded-lg h-[80px]" />
+                    <div className="bg-neutral-800/50 animate-pulse rounded-lg h-[120px]" />
                 </div>
             </div>
         );
@@ -23,165 +23,67 @@ export default function ClosestApproachPanel({ prediction, loading }: Props) {
 
     if (!prediction) {
         return (
-            <div className="card">
-                <SectionHeader />
-                <div style={{
-                    textAlign: 'center',
-                    padding: '1.5rem',
-                    color: 'var(--text-muted)',
-                }}>
-                    <Target size={32} style={{ margin: '0 auto 0.75rem', opacity: 0.4 }} />
-                    <p style={{ fontSize: '0.8rem', margin: '0 0 0.75rem', color: 'var(--text-secondary)' }}>
-                        No prediction computed
-                    </p>
-                    <p style={{ fontSize: '0.68rem', margin: 0, lineHeight: 1.5 }}>
-                        Click <strong style={{ color: '#8b5cf6' }}>PREDICT TCA</strong> to propagate both orbits over a <strong>24-hour window</strong> at
-                        5-minute intervals — the system finds the <em>minimum separation distance</em> and identifies the
-                        exact Time of Closest Approach (TCA).
+            <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 h-[400px] flex flex-col">
+                <h3 className="text-sm font-semibold text-neutral-100 mb-6">Prediction Summary</h3>
+                <div className="flex-1 flex flex-col items-center justify-center text-center">
+                    <Target size={24} className="mb-4 text-neutral-600" />
+                    <p className="text-sm text-neutral-500">
+                        No prediction computed.<br/>
+                        Click <strong>Predict TCA</strong> to evaluate a 24-hour window.
                     </p>
                 </div>
             </div>
         );
     }
 
-    const riskColor = prediction.predicted_risk === 'CRITICAL' ? 'var(--risk-critical)'
-        : prediction.predicted_risk === 'WARNING' ? 'var(--risk-warning)' : 'var(--risk-safe)';
-    const riskBg = prediction.predicted_risk === 'CRITICAL' ? 'var(--risk-critical-bg)'
-        : prediction.predicted_risk === 'WARNING' ? 'var(--risk-warning-bg)' : 'var(--risk-safe-bg)';
+    const { min_distance_km, predicted_risk: risk_level } = prediction;
+    const isCritical = risk_level === 'CRITICAL';
+    const isWarning = risk_level === 'WARNING';
+    
+    const riskBorder = isCritical ? 'border-rose-900' : (isWarning ? 'border-amber-900/50' : 'border-emerald-900/50');
+    const riskBg = isCritical ? 'bg-rose-950/30' : (isWarning ? 'bg-amber-950/20' : 'bg-emerald-950/20');
+    const riskText = isCritical ? 'text-rose-500' : (isWarning ? 'text-amber-500' : 'text-emerald-500');
 
     const tcaDate = new Date(prediction.tca_utc);
     const confidence = prediction.confidence_level;
-    const confColor = confidence === 'HIGH' ? 'var(--risk-safe)'
-        : confidence === 'MEDIUM' ? 'var(--risk-warning)' : 'var(--risk-critical)';
 
     return (
-        <div className="card animate-fade-in">
-            <SectionHeader />
+        <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6 min-h-[400px] h-full flex flex-col overflow-y-auto">
+            <h3 className="text-sm font-semibold text-neutral-100 mb-6 shrink-0">Prediction Summary</h3>
 
-            {/* TCA display */}
-            <div style={{
-                marginTop: '1rem',
-                background: riskBg,
-                border: `1px solid ${riskColor}40`,
-                borderRadius: '10px',
-                padding: '1rem',
-                textAlign: 'center',
-            }}>
-                <p className="label" style={{ margin: '0 0 0.5rem', color: riskColor }}>
-                    PREDICTED MINIMUM DISTANCE
+            <div className={`rounded-xl p-5 border ${riskBorder} ${riskBg} flex flex-col items-center justify-center text-center mb-6 shrink-0`}>
+                <p className="text-xs text-neutral-400 font-medium mb-1">
+                    Closest Approach Distance
                 </p>
-                <div className="value-large" style={{ color: riskColor, marginBottom: '0.5rem' }}>
-                    {prediction.min_distance_km.toFixed(2)}
-                    <span style={{ fontSize: '0.8rem', fontWeight: 400, marginLeft: '4px', color: 'var(--text-muted)' }}>km</span>
+                <div className={`text-4xl font-mono ${riskText} mb-3`}>
+                    {min_distance_km.toFixed(2)}
+                    <span className="text-sm text-neutral-500 ml-1 font-sans">km</span>
                 </div>
-                <div className={`risk-badge risk-${prediction.predicted_risk.toLowerCase()}`}>
-                    {prediction.predicted_risk === 'SAFE' ? <ShieldCheck size={12} /> : <ShieldAlert size={12} />}
-                    {prediction.predicted_risk}
+                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-md text-xs font-semibold uppercase ${riskText} bg-black/20`}>
+                    {risk_level === 'SAFE' ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
+                    {risk_level} RISK
                 </div>
             </div>
 
-            {/* Details grid */}
-            <div style={{
-                marginTop: '0.75rem',
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '0.5rem',
-            }}>
-                <DetailCard
-                    icon={<Clock size={14} color="var(--accent-cyan)" />}
-                    label="TIME OF CLOSEST APPROACH (TCA)"
-                    value={tcaDate.toISOString().replace('T', ' ').slice(0, 19) + ' UTC'}
-                    wide
-                />
-                <DetailCard
-                    icon={<Target size={14} color="var(--accent-cyan)" />}
-                    label="PROPAGATION WINDOW"
-                    value={`${prediction.window_hours} hours / ${prediction.step_minutes}-min steps`}
-                />
-                <DetailCard
-                    icon={<TrendingDown size={14} color={confColor} />}
-                    label="CONFIDENCE LEVEL"
-                    value={confidence}
-                    valueColor={confColor}
-                />
-            </div>
-
-            {/* Objects */}
-            <div style={{
-                marginTop: '0.75rem',
-                background: 'var(--bg-secondary)',
-                borderRadius: '8px',
-                padding: '0.6rem',
-                border: '1px solid var(--border-primary)',
-                display: 'flex',
-                justifyContent: 'space-between',
-            }}>
-                <div>
-                    <p className="label" style={{ margin: 0, fontSize: '0.5rem' }}>PRIMARY</p>
-                    <p className="mono" style={{ margin: 0, fontSize: '0.72rem' }}>{prediction.satellite_name}</p>
+            <div className="grid grid-cols-2 gap-px bg-neutral-800 rounded-lg overflow-hidden border border-white/10 shrink-0">
+                <div className="col-span-2 bg-neutral-950/40 backdrop-blur-xl p-3 flex flex-col justify-center">
+                    <span className="text-[11px] text-neutral-500 uppercase tracking-wider font-semibold mb-1">Time of Closest Approach (UTC)</span>
+                    <span className="text-sm font-mono text-neutral-200">{tcaDate.toISOString().replace('T', ' ').slice(0, 19)}</span>
                 </div>
-                <div style={{
-                    display: 'flex', alignItems: 'center', gap: '6px',
-                    color: 'var(--text-muted)',
-                    fontSize: '0.7rem',
-                }}>→</div>
-                <div style={{ textAlign: 'right' }}>
-                    <p className="label" style={{ margin: 0, fontSize: '0.5rem' }}>SECONDARY</p>
-                    <p className="mono" style={{ margin: 0, fontSize: '0.72rem' }}>{prediction.debris_name}</p>
-                </div>
+                <MetricCard label="Confidence" value={confidence} />
+                <MetricCard label="Window" value={`${prediction.window_hours}h / ${prediction.step_minutes}m`} />
+                <MetricCard label="Total Steps" value={prediction.total_steps.toString()} />
+                <MetricCard label="Model" value={prediction.propagation_model} />
             </div>
         </div>
     );
 }
 
-function SectionHeader() {
+function MetricCard({ label, value }: { label: string; value: string }) {
     return (
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            paddingBottom: '0.5rem',
-            borderBottom: '1px solid var(--border-primary)',
-        }}>
-            <Target size={14} color="var(--accent-cyan)" />
-            <h2 style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.12em',
-                margin: 0,
-                color: 'var(--text-secondary)',
-            }}>
-                CLOSEST APPROACH PREDICTION
-            </h2>
-        </div>
-    );
-}
-
-function DetailCard({ icon, label, value, valueColor, wide }: {
-    icon: React.ReactNode;
-    label: string;
-    value: string;
-    valueColor?: string;
-    wide?: boolean;
-}) {
-    return (
-        <div style={{
-            background: 'var(--bg-secondary)',
-            borderRadius: '8px',
-            padding: '0.5rem 0.6rem',
-            border: '1px solid var(--border-primary)',
-            gridColumn: wide ? '1 / -1' : undefined,
-        }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                {icon}
-                <span className="label" style={{ fontSize: '0.5rem' }}>{label}</span>
-            </div>
-            <p className="mono" style={{
-                margin: 0, fontSize: '0.75rem',
-                color: valueColor || 'var(--text-primary)',
-            }}>
-                {value}
-            </p>
+        <div className="bg-neutral-950/40 backdrop-blur-xl p-3 flex flex-col justify-center">
+            <span className="text-[11px] text-neutral-500 uppercase tracking-wider font-semibold mb-1">{label}</span>
+            <span className="text-xs font-mono text-neutral-300">{value}</span>
         </div>
     );
 }

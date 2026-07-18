@@ -1,7 +1,6 @@
 'use client';
 
 import { Satellite, DebrisObj } from '@/lib/api';
-import { Satellite as SatIcon, Trash2, Radio, Globe2 } from 'lucide-react';
 
 interface Props {
     satellite: Satellite | null;
@@ -12,79 +11,60 @@ interface Props {
 export default function OverviewPanel({ satellite, debris, loading }: Props) {
     if (loading) {
         return (
-            <div className="card">
-                <PanelHeader title="OBJECT OVERVIEW" icon="overview" />
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                    <div className="skeleton" style={{ height: '140px', flex: 1 }} />
-                    <div className="skeleton" style={{ height: '140px', flex: 1 }} />
+            <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+                <h3 className="text-sm font-semibold text-neutral-100 mb-6">Object Details</h3>
+                <div className="flex flex-col gap-4">
+                    <div className="bg-neutral-800/50 animate-pulse rounded-lg h-[160px] border border-neutral-700/50" />
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="card animate-fade-in">
-            <PanelHeader title="OBJECT OVERVIEW" icon="overview" />
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+        <div className="bg-neutral-950/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6">
+            <h3 className="text-sm font-semibold text-neutral-100 mb-6">Object Details</h3>
+            <div className="flex flex-col xl:flex-row gap-6">
                 {/* Satellite Card */}
-                <div style={{
-                    flex: 1,
-                    background: 'var(--bg-secondary)',
-                    borderRadius: '10px',
-                    padding: '1rem',
-                    border: '1px solid var(--border-primary)',
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.75rem' }}>
-                        <SatIcon size={16} color="var(--accent-cyan)" />
-                        <span className="label" style={{ fontSize: '0.65rem', color: 'var(--accent-cyan)' }}>
-                            SATELLITE
-                        </span>
-                    </div>
+                <div className="flex-1 bg-neutral-900 border border-white/10 rounded-xl p-5">
+                    <h4 className="text-xs font-semibold tracking-wider uppercase text-neutral-500 mb-4">Primary Satellite</h4>
                     {satellite ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <InfoRow label="NAME" value={satellite.name} />
-                            <InfoRow label="NORAD ID" value={String(satellite.norad_id)} highlight />
-                            <InfoRow label="OPERATOR" value={satellite.operator} />
-                            <InfoRow label="ORBIT" value={satellite.orbit_type} />
-                            <InfoRow label="TLE EPOCH" value={
+                        <div className="flex flex-col divide-y divide-neutral-800/50">
+                            <InfoRow label="Name" value={satellite.name} />
+                            <InfoRow label="NORAD ID" value={String(satellite.norad_id)} valueClass="text-emerald-400 font-mono" />
+                            <InfoRow label="Operator" value={satellite.operator} />
+                            <InfoRow label="Orbit" value={satellite.orbit_type} />
+                            <InfoRow label="TLE Epoch" value={
                                 satellite.latest_tle_epoch
                                     ? new Date(satellite.latest_tle_epoch).toISOString().slice(0, 19) + 'Z'
-                                    : 'NO TLE'
-                            } />
+                                    : 'N/A'
+                            } valueClass="font-mono text-neutral-400" />
                         </div>
                     ) : (
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>No satellite selected</p>
+                        <div className="py-8 text-center text-sm text-neutral-500">
+                            Select a primary object to view details
+                        </div>
                     )}
                 </div>
 
                 {/* Debris Card */}
-                <div style={{
-                    flex: 1,
-                    background: 'var(--bg-secondary)',
-                    borderRadius: '10px',
-                    padding: '1rem',
-                    border: '1px solid var(--border-primary)',
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.75rem' }}>
-                        <Trash2 size={16} color="var(--risk-warning)" />
-                        <span className="label" style={{ fontSize: '0.65rem', color: 'var(--risk-warning)' }}>
-                            DEBRIS
-                        </span>
-                    </div>
+                <div className="flex-1 bg-neutral-900 border border-white/10 rounded-xl p-5">
+                    <h4 className="text-xs font-semibold tracking-wider uppercase text-neutral-500 mb-4">Secondary Object</h4>
                     {debris ? (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                            <InfoRow label="NAME" value={debris.name} />
-                            <InfoRow label="NORAD ID" value={String(debris.norad_id)} highlight />
-                            <InfoRow label="SOURCE" value={debris.source} />
-                            <InfoRow label="ORBIT" value={debris.orbit_type} />
-                            <InfoRow label="TLE EPOCH" value={
+                        <div className="flex flex-col divide-y divide-neutral-800/50">
+                            <InfoRow label="Name" value={debris.name} />
+                            <InfoRow label="NORAD ID" value={String(debris.norad_id)} valueClass="text-amber-400 font-mono" />
+                            <InfoRow label="Source" value={debris.source} />
+                            <InfoRow label="Orbit" value={debris.orbit_type} />
+                            <InfoRow label="TLE Epoch" value={
                                 debris.latest_tle_epoch
                                     ? new Date(debris.latest_tle_epoch).toISOString().slice(0, 19) + 'Z'
-                                    : 'NO TLE'
-                            } />
+                                    : 'N/A'
+                            } valueClass="font-mono text-neutral-400" />
                         </div>
                     ) : (
-                        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>No debris selected</p>
+                        <div className="py-8 text-center text-sm text-neutral-500">
+                            Select a secondary object to view details
+                        </div>
                     )}
                 </div>
             </div>
@@ -92,37 +72,11 @@ export default function OverviewPanel({ satellite, debris, loading }: Props) {
     );
 }
 
-function PanelHeader({ title, icon }: { title: string; icon: string }) {
+function InfoRow({ label, value, valueClass = 'text-neutral-200' }: { label: string; value: string; valueClass?: string }) {
     return (
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            paddingBottom: '0.5rem',
-            borderBottom: '1px solid var(--border-primary)',
-        }}>
-            <Globe2 size={14} color="var(--accent-cyan)" />
-            <h2 style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.12em',
-                margin: 0,
-                color: 'var(--text-secondary)',
-            }}>
-                {title}
-            </h2>
-        </div>
-    );
-}
-
-function InfoRow({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
-    return (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span className="label" style={{ fontSize: '0.6rem' }}>{label}</span>
-            <span className="mono" style={{
-                fontSize: '0.72rem',
-                color: highlight ? 'var(--accent-cyan)' : 'var(--text-primary)',
-            }}>
+        <div className="flex justify-between items-center py-2.5 first:pt-0 last:pb-0">
+            <span className="text-xs text-neutral-400">{label}</span>
+            <span className={`text-sm ${valueClass}`}>
                 {value}
             </span>
         </div>

@@ -89,7 +89,8 @@ def store_tle_record(
     debris_id = None
 
     if object_type == "satellite":
-        sat = db.query(Satellite).filter(Satellite.norad_id == norad_id).first()
+        sat = db.query(Satellite).filter(
+            Satellite.norad_id == norad_id).first()
         if sat:
             satellite_id = sat.id
     else:

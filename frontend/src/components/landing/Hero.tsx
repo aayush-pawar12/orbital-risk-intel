@@ -1,5 +1,5 @@
 import React from "react";
-import { Satellite, ShieldAlert, Rocket, ChevronRight, Sparkles, AlertCircle } from "lucide-react";
+import { Satellite, ShieldAlert, ChevronRight, } from "lucide-react";
 import { motion } from "motion/react";
 
 interface HeroProps {
@@ -37,7 +37,7 @@ export default function Hero({ onLaunchMissionControl, satelliteCount }: HeroPro
             className="max-w-xl flex flex-col items-start gap-12 mt-4 lg:mt-12"
           >
             <h1 className="text-[60px] md:text-[86px] text-neutral-900 dark:text-white leading-[0.9] font-black tracking-tighter select-none font-sans uppercase">
-              ORBIT<br />RISK<br />SYSTEM
+              ORBITAL<br />RISK<br />SYSTEM
             </h1>
 
             {/* Notification Bar */}
@@ -47,10 +47,10 @@ export default function Hero({ onLaunchMissionControl, satelliteCount }: HeroPro
               </div>
               <div>
                 <p className="text-neutral-900 dark:text-neutral-100 text-sm font-bold leading-tight">
-                  Conjunction Data Message (CDM) Processing
+                  Telemetry Ingestion & CDM Processing
                 </p>
                 <p className="text-neutral-600 dark:text-neutral-400 text-xs">
-                  Continuous ingestion of tracking data for updated collision probability evaluation.
+                  Continuous ingestion of ephemeris and observations for Probability of Collision (Pc) assessment.
                 </p>
               </div>
             </div>
@@ -65,21 +65,21 @@ export default function Hero({ onLaunchMissionControl, satelliteCount }: HeroPro
           >
 
             {/* Active chip */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-neutral-200/50 dark:bg-neutral-950/40 backdrop-blur-xl border border-neutral-300/40 dark:border-white/10 rounded-full text-[10px] font-bold tracking-widest uppercase text-red-600 dark:text-rose-400">
-              <span className="w-2 h-2 rounded-full bg-red-600 dark:bg-rose-500 animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-500/10 backdrop-blur-xl border border-emerald-500/20 rounded-full text-[10px] font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-emerald-500 animate-pulse"></span>
               SYSTEM NOMINAL
             </div>
 
             <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed font-medium">
-              Monitor spacecraft, evaluate conjunction risk, compute Time of Closest Approach (TCA), and verify mitigation strategies via the operational audit trail.
+              Autonomous Space Situational Awareness (SSA) platform providing continuous Conjunction Assessment (CA), orbit propagation, and maneuver planning.
             </p>
 
             <button
               onClick={onLaunchMissionControl}
               id="access-intel-btn"
-              className="bg-white/5 hover:bg-white/15 border border-white/10 text-white backdrop-blur-md px-6 py-3 rounded-full font-bold text-xs flex items-center gap-2 transition-all hover:translate-x-1 duration-300 shadow-md cursor-pointer"
+              className="bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-600 dark:text-rose-400 backdrop-blur-md px-6 py-3 rounded-full font-bold text-xs flex items-center gap-2 transition-all hover:translate-x-1 duration-300 shadow-md cursor-pointer"
             >
-              View Architecture <ChevronRight className="w-4 h-4 text-rose-400" />
+              Access Mission Console <ChevronRight className="w-4 h-4 text-rose-600 dark:text-rose-400" />
             </button>
           </motion.div>
 
@@ -95,7 +95,7 @@ export default function Hero({ onLaunchMissionControl, satelliteCount }: HeroPro
           {/* Stat 1 */}
           <div className="bg-neutral-100/40 dark:bg-neutral-950/40 backdrop-blur-xl p-8 rounded-2xl border border-neutral-300/30 dark:border-white/10 flex flex-col justify-center relative group hover:bg-neutral-200/50 dark:hover:bg-white/5 transition-all duration-300">
             <span className="text-neutral-500 dark:text-neutral-400 text-xs font-semibold uppercase tracking-widest mb-4">
-              TRACKING REGIMES
+              ORBITAL REGIMES
             </span>
             <span className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white leading-none tracking-tighter mb-4">
               LEO &middot; MEO &middot; GEO
@@ -108,20 +108,20 @@ export default function Hero({ onLaunchMissionControl, satelliteCount }: HeroPro
           {/* Stat 2 */}
           <div className="bg-neutral-100/40 dark:bg-neutral-950/40 backdrop-blur-xl p-8 rounded-2xl border border-neutral-300/30 dark:border-white/10 flex flex-col items-center justify-center text-center group hover:bg-neutral-200/50 dark:hover:bg-white/5 transition-all duration-300">
             <span className="text-neutral-500 dark:text-neutral-400 text-xs font-semibold uppercase tracking-widest mb-4">
-              RSO CATALOG
+              ACTIVE RSO CATALOG
             </span>
             <span className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white leading-none tracking-tighter mb-6">
-              27,000+ <span className="text-base md:text-lg text-neutral-500">RSOs</span>
+              27,000+ <span className="text-base md:text-lg text-neutral-500">Objects</span>
             </span>
             <div className="flex flex-wrap justify-center gap-2">
-              <div className="bg-neutral-200/50 dark:bg-neutral-900/50 px-3 py-1 rounded-full border border-neutral-300/50 dark:border-white/5">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-700 dark:text-neutral-300">Payload</span>
+              <div className="bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400">Payload</span>
               </div>
-              <div className="bg-neutral-200/50 dark:bg-neutral-900/50 px-3 py-1 rounded-full border border-neutral-300/50 dark:border-white/5">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-700 dark:text-neutral-300">Debris</span>
+              <div className="bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-rose-600 dark:text-rose-400">Debris</span>
               </div>
-              <div className="bg-neutral-200/50 dark:bg-neutral-900/50 px-3 py-1 rounded-full border border-neutral-300/50 dark:border-white/5">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-neutral-700 dark:text-neutral-300">Rocket Body</span>
+              <div className="bg-rose-500/10 px-3 py-1 rounded-full border border-rose-500/20">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-rose-600 dark:text-rose-400">Rocket Body</span>
               </div>
             </div>
           </div>
@@ -136,7 +136,7 @@ export default function Hero({ onLaunchMissionControl, satelliteCount }: HeroPro
             </span>
             <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed pr-6 flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              Data ingestion nominal. No critical alerts.
+              Telemetry nominal. No critical conjunctions.
             </p>
           </div>
         </motion.div>
